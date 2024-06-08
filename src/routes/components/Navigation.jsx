@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -10,7 +10,7 @@ import {
   PopoverGroup,
   PopoverPanel,
   Transition,
-} from '@headlessui/react'
+} from "@headlessui/react";
 import {
   ArrowPathIcon,
   Bars3Icon,
@@ -19,51 +19,90 @@ import {
   FingerPrintIcon,
   SquaresPlusIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
+} from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  PhoneIcon,
+  PlayCircleIcon,
+} from "@heroicons/react/20/solid";
 
 const products = [
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-  { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'Security', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },
-  { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-  { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
-]
+  {
+    name: "Analytics",
+    description: "Get a better understanding of your traffic",
+    href: "#",
+    icon: ChartPieIcon,
+  },
+  {
+    name: "Engagement",
+    description: "Speak directly to your customers",
+    href: "#",
+    icon: CursorArrowRaysIcon,
+  },
+  {
+    name: "Security",
+    description: "Your customers’ data will be safe and secure",
+    href: "#",
+    icon: FingerPrintIcon,
+  },
+  {
+    name: "Integrations",
+    description: "Connect with third-party tools",
+    href: "#",
+    icon: SquaresPlusIcon,
+  },
+  {
+    name: "Automations",
+    description: "Build strategic funnels that will convert",
+    href: "#",
+    icon: ArrowPathIcon,
+  },
+];
 const callsToAction = [
-  { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-  { name: 'Contact sales', href: '#', icon: PhoneIcon },
-]
+  { name: "Watch demo", href: "#", icon: PlayCircleIcon },
+  { name: "Contact sales", href: "#", icon: PhoneIcon },
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Navigation() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <header className="bg-white">
-      <nav className="flex justify-between items-center mx-auto lg:px-8 p-6 max-w-7xl" aria-label="Global">
+      <nav
+        className="flex items-center justify-between p-6 mx-auto max-w-7xl lg:px-8"
+        aria-label="Global"
+      >
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img className="w-auto h-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="" />
+            <img
+              className="w-auto h-8"
+              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+              alt=""
+            />
           </a>
         </div>
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="inline-flex justify-center items-center -m-2.5 p-2.5 rounded-md text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
-        <PopoverGroup className="lg:flex lg:gap-x-12 hidden">
+        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 font-semibold text-gray-900 text-sm leading-6">
+            <PopoverButton className="flex items-center text-sm font-semibold leading-6 text-gray-900 gap-x-1">
               Product
-              <ChevronDownIcon className="flex-none w-5 h-5 text-gray-400" aria-hidden="true" />
+              <ChevronDownIcon
+                className="flex-none w-5 h-5 text-gray-400"
+                aria-hidden="true"
+              />
             </PopoverButton>
 
             <Transition
@@ -74,18 +113,24 @@ export default function Navigation() {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <PopoverPanel className="top-full -left-8 z-10 absolute bg-white shadow-lg mt-3 rounded-3xl w-screen max-w-md overflow-hidden ring-1 ring-gray-900/5">
+              <PopoverPanel className="absolute z-10 w-screen max-w-md mt-3 overflow-hidden bg-white shadow-lg -left-8 top-full rounded-3xl ring-1 ring-gray-900/5">
                 <div className="p-4">
                   {products.map((item) => (
                     <div
                       key={item.name}
-                      className="relative flex items-center gap-x-6 hover:bg-gray-50 p-4 rounded-lg text-sm leading-6 group"
+                      className="relative flex items-center p-4 text-sm leading-6 rounded-lg group gap-x-6 hover:bg-gray-50"
                     >
-                      <div className="group-hover:bg-white flex flex-none justify-center items-center bg-gray-50 rounded-lg w-11 h-11">
-                        <item.icon className="group-hover:text-indigo-600 w-6 h-6 text-gray-600" aria-hidden="true" />
+                      <div className="flex items-center justify-center flex-none rounded-lg h-11 w-11 bg-gray-50 group-hover:bg-white">
+                        <item.icon
+                          className="w-6 h-6 text-gray-600 group-hover:text-indigo-600"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="flex-auto">
-                        <a href={item.href} className="block font-semibold text-gray-900">
+                        <a
+                          href={item.href}
+                          className="block font-semibold text-gray-900"
+                        >
                           {item.name}
                           <span className="absolute inset-0" />
                         </a>
@@ -94,14 +139,17 @@ export default function Navigation() {
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 bg-gray-50 divide-x divide-gray-900/5">
+                <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
                   {callsToAction.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
-                      className="flex justify-center items-center gap-x-2.5 hover:bg-gray-100 p-3 font-semibold text-gray-900 text-sm leading-6"
+                      className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"
                     >
-                      <item.icon className="flex-none w-5 h-5 text-gray-400" aria-hidden="true" />
+                      <item.icon
+                        className="flex-none w-5 h-5 text-gray-400"
+                        aria-hidden="true"
+                      />
                       {item.name}
                     </a>
                   ))}
@@ -110,33 +158,37 @@ export default function Navigation() {
             </Transition>
           </Popover>
 
-          <a href="#" className="font-semibold text-gray-900 text-sm leading-6">
+          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Features
           </a>
-          <a href="#" className="font-semibold text-gray-900 text-sm leading-6">
+          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Marketplace
           </a>
-          <a href="#" className="font-semibold text-gray-900 text-sm leading-6">
+          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Company
           </a>
         </PopoverGroup>
-        <div className="lg:flex lg:flex-1 lg:justify-end hidden">
-          <a href="#" className="font-semibold text-gray-900 text-sm leading-6">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Log in <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </nav>
       <MobileNavigation props={{ mobileMenuOpen, setMobileMenuOpen }} />
     </header>
-  )
+  );
 }
 
 function MobileNavigation({ props }) {
   return (
-    <Dialog className="lg:hidden" open={props.mobileMenuOpen} onClose={props.setMobileMenuOpen}>
-      <div className="z-10 fixed inset-0" />
-      <DialogPanel className="right-0 z-10 fixed inset-y-0 bg-white px-6 py-6 w-full sm:max-w-sm overflow-y-auto sm:ring-1 sm:ring-gray-900/10">
-        <div className="flex justify-between items-center">
+    <Dialog
+      className="lg:hidden"
+      open={props.mobileMenuOpen}
+      onClose={props.setMobileMenuOpen}
+    >
+      <div className="fixed inset-0 z-10" />
+      <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full px-6 py-6 overflow-y-auto bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <div className="flex items-center justify-between">
           <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
@@ -147,33 +199,36 @@ function MobileNavigation({ props }) {
           </a>
           <button
             type="button"
-            className="-m-2.5 p-2.5 rounded-md text-gray-700"
+            className="-m-2.5 rounded-md p-2.5 text-gray-700"
             onClick={() => props.setMobileMenuOpen(false)}
           >
             <span className="sr-only">Close menu</span>
             <XMarkIcon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="mt-6 flow-root">
+        <div className="flow-root mt-6">
           <div className="-my-6 divide-y divide-gray-500/10">
-            <div className="space-y-2 py-6">
+            <div className="py-6 space-y-2">
               <Disclosure as="div" className="-mx-3">
                 {({ open }) => (
                   <>
-                    <DisclosureButton className="flex justify-between items-center hover:bg-gray-50 py-2 pr-3.5 pl-3 rounded-lg w-full font-semibold text-base text-gray-900 leading-7">
+                    <DisclosureButton className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
                       Product
                       <ChevronDownIcon
-                        className={classNames(open ? 'rotate-180' : '', 'h-5 w-5 flex-none')}
+                        className={classNames(
+                          open ? "rotate-180" : "",
+                          "h-5 w-5 flex-none",
+                        )}
                         aria-hidden="true"
                       />
                     </DisclosureButton>
-                    <DisclosurePanel className="space-y-2 mt-2">
+                    <DisclosurePanel className="mt-2 space-y-2">
                       {[...products, ...callsToAction].map((item) => (
                         <DisclosureButton
                           key={item.name}
                           as="a"
                           href={item.href}
-                          className="block hover:bg-gray-50 py-2 pr-3 pl-6 rounded-lg font-semibold text-gray-900 text-sm leading-7"
+                          className="block py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50"
                         >
                           {item.name}
                         </DisclosureButton>
@@ -184,19 +239,19 @@ function MobileNavigation({ props }) {
               </Disclosure>
               <a
                 href="#"
-                className="block hover:bg-gray-50 -mx-3 px-3 py-2 rounded-lg font-semibold text-base text-gray-900 leading-7"
+                className="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50"
               >
                 Features
               </a>
               <a
                 href="#"
-                className="block hover:bg-gray-50 -mx-3 px-3 py-2 rounded-lg font-semibold text-base text-gray-900 leading-7"
+                className="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50"
               >
                 Marketplace
               </a>
               <a
                 href="#"
-                className="block hover:bg-gray-50 -mx-3 px-3 py-2 rounded-lg font-semibold text-base text-gray-900 leading-7"
+                className="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50"
               >
                 Company
               </a>
@@ -204,7 +259,7 @@ function MobileNavigation({ props }) {
             <div className="py-6">
               <a
                 href="#"
-                className="block hover:bg-gray-50 -mx-3 px-3 py-2.5 rounded-lg font-semibold text-base text-gray-900 leading-7"
+                className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
               >
                 Log in
               </a>
@@ -213,5 +268,5 @@ function MobileNavigation({ props }) {
         </div>
       </DialogPanel>
     </Dialog>
-  )
+  );
 }

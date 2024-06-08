@@ -1,8 +1,8 @@
-import { 
-  NavLink, 
-  Outlet, 
+import {
+  NavLink,
+  Outlet,
   // useLoaderData,
-  Form 
+  Form,
 } from "react-router-dom";
 
 export async function loader() {
@@ -10,7 +10,7 @@ export async function loader() {
   // return { contacts };
 }
 
-export async function action(){
+export async function action() {
   // const contact = await createContact();
   // return{ contact };
 }
@@ -18,8 +18,5 @@ export async function action(){
 export default function Root() {
   // const { contacts } = useLoaderData();
 
-  return (
-    <>
-    </>
-  );
+  return <></>;
 }

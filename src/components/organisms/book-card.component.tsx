@@ -1,6 +1,5 @@
 import React from "react";
 
-
 interface BookCardProps {
   children?: React.ReactNode;
 }
@@ -19,8 +18,8 @@ export function BookCard({ children }: BookCardProps) {
             <span className="text-xs text-gray-500">Ayoub</span>
           </div>
           <div className="text-sm leading-loose text-gray-700">
-            A counterintuitive approach to living a good life by focusing on what
-            truly matters.
+            A counterintuitive approach to living a good life by focusing on
+            what truly matters.
           </div>
         </div>
         <div className="my-4 flex items-center">
