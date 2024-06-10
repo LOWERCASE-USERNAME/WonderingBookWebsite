@@ -11,7 +11,7 @@ export function BlockQuote({ children, className, text, author }: BlockQuoteProp
     <>
       <div className={cn("flex flex-col items-center gap-2", className)}>
         <blockquote>
-          <p className="text-sm italic leading-relaxed">{text}</p>
+          <p className="text-sm italic leading-relaxed">"{text}"</p>
         </blockquote>
         <span className="m-auto text-lg font-bold">{author}</span>
       </div>
