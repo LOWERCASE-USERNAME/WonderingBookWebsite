@@ -70,9 +70,9 @@ function classNames(...classes) {
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
-    <header className="bg-white">
+    <header className="h-full bg-white">
       <nav
-        className="flex items-center justify-between p-6 mx-auto max-w-7xl lg:px-8"
+        className="flex items-center justify-between h-full mx-auto max-w-7xl lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">

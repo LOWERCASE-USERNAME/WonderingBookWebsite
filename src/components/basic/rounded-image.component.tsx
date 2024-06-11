@@ -8,7 +8,7 @@ interface RoundedImageProps extends CommonComponentProps {
 export function RoundedImage({ children, src, className }: RoundedImageProps) {
   return (
     <>
-      <img className={cn(" rounded-full w-36 h-36", className)} src={src} />
+      <img className={cn(" rounded-full w-36 h-36 object-cover", className)} src={src} />
       {children}
     </>
   );

@@ -1,5 +1,5 @@
-import { CommonComponentProps } from "../../lib/props";
-import { cn } from "../../lib/utils";
+import { CommonComponentProps } from "../../../../lib/props";
+import { cn } from "../../../../lib/utils";
 
 interface IdeaCardFooterProps extends CommonComponentProps {
   saveCounter?: number;

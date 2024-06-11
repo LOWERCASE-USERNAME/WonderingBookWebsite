@@ -11,7 +11,7 @@ export function BookCard({ children }: BookCardProps) {
         <div className="flex flex-col">
           <div className="flex items-center gap-4 -space-x-1 overflow-hidden">
             <img
-              className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+              className="inline-block w-6 h-6 rounded-full ring-2 ring-white"
               src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
               alt=""
             />
@@ -22,7 +22,7 @@ export function BookCard({ children }: BookCardProps) {
             what truly matters.
           </div>
         </div>
-        <div className="my-4 flex items-center">
+        <div className="flex items-center my-4">
           <img
             className="mx-8 h-28"
             src="../../../Subtle_Art_Of_Not_Giving_A_Fuck.png"

@@ -11,8 +11,8 @@ import "./index.css";
 import App from "./App.tsx";
 import ErrorBoundary from "./routes/errors/error.jsx";
 import Error404 from "./routes/errors/error404.tsx";
-import { BookCard } from "./components/organisms/book-card.component.tsx";
-import { IdeaCard } from "./components/organisms/idea-card.component.tsx";
+import { BookCard } from "./components/complex/cards/book/book-card.component.tsx";
+import PostDetail from "./pages/post-detail.page.tsx";
 // import Contact, {loader as contactLoader} from "./routes/contact";
 
 const router = createBrowserRouter(
@@ -24,17 +24,23 @@ const router = createBrowserRouter(
         element={
           <>
             <BookCard />
-            <BookCard />
           </>
         }
         errorElement={<ErrorBoundary />}
       />
       <Route
-        path="/idea"
+        path="/write"
         element={
           <>
-            <IdeaCard />
-            <IdeaCard />
+          </>
+        }
+        errorElement={<ErrorBoundary />}
+      />
+      <Route
+        path="/detail"
+        element={
+          <>
+            <PostDetail params={{ id: "FirstIdea" }} />
           </>
         }
         errorElement={<ErrorBoundary />}

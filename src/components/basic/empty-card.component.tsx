@@ -7,7 +7,7 @@ interface EmptyCardProps extends CommonComponentProps {
 export function EmptyCard({ children, className }: EmptyCardProps) {
   return (
     <>
-      <div className={cn("bg-white rounded-3xl p-4 w-[544px] flex flex-col justify-center items-center gap-6", className)}>
+      <div className={cn("bg-white rounded-2xl p-4 flex flex-col justify-center items-center gap-6", className)}>
         {children}
       </div>
     </>
