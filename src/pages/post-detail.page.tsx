@@ -1,8 +1,8 @@
 import { CuratorCard } from "../components/complex/cards/curator/curator-card.component";
 import { QuoteCard } from "../components/complex/cards/idea/quote-card.component";
 import { TextCard } from "../components/complex/cards/idea/text-card.component";
-import Header from "../routes/components/Navigation";
 import { EmptyCard } from "../components/basic/empty-card.component";
+import Navigation from "../components/navigations/navigation";
 
 interface Props {
   params: {
@@ -17,7 +17,7 @@ export default function PostDetail({ params }: Props) {
     <>
       <div className="container flex flex-col gap-6">
         <nav className="h-12">
-          < Header />
+          <Navigation />
         </nav>
         <section className="flex p-4 bg-white">
           <EmptyCard>

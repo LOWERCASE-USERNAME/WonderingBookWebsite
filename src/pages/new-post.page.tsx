@@ -1,5 +1,5 @@
 import { EmptyCard } from "../components/basic/empty-card.component";
-import Navigation from "../routes/components/Navigation";
+import Navigation from "../components/navigations/navigation";
 
 interface Props {
   params: {
