@@ -24,25 +24,12 @@ export function HorizontalScrollable({ children, className, defaultScrollAmount,
 
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
 
-      // Handle infinite scroll wrapping
-      if (isWrapAround) { // if wrapped around always need to display arrow.
-        if (scrollLeft === 0) {
-          scrollContainerRef.current.scrollLeft = scrollWidth - clientWidth * 2;
-        } else if (scrollLeft + clientWidth >= scrollWidth) {
-          scrollContainerRef.current.scrollLeft = clientWidth;
-        }
-
+      if (isHideArrows) {
+        setShowLeftArrow(scrollLeft > 0); // Show left arrow if not at the start
+        setShowRightArrow(Math.round(scrollLeft + clientWidth) < scrollWidth); // Show right arrow if not at the end
+      } else {
         setShowLeftArrow(true);
         setShowRightArrow(true);
-      } else {
-        // Normal arrow visibility logic
-        if (isHideArrows) {
-          setShowLeftArrow(scrollLeft > 0); // Show left arrow if not at the start
-          setShowRightArrow(Math.round(scrollLeft + clientWidth) < scrollWidth); // Show right arrow if not at the end
-        } else {
-          setShowLeftArrow(true);
-          setShowRightArrow(true);
-        }
       }
     };
 
@@ -104,34 +91,37 @@ export function HorizontalScrollable({ children, className, defaultScrollAmount,
 
   const scroll = (direction: string) => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, clientWidth } = scrollContainerRef.current;
+      const { scrollLeft, clientWidth, scrollWidth } = scrollContainerRef.current;
       const scrollAmount = defaultScrollAmount ?? clientWidth / 2; // Adjust scroll amount as needed
 
       if (direction === "left") {
-        scrollContainerRef.current.scrollTo({
-          left: scrollLeft - scrollAmount,
-          behavior: "smooth",
-        });
+        if (scrollLeft - scrollAmount < 0 && isWrapAround) {
+          scrollContainerRef.current.scrollTo({
+            left: scrollWidth - clientWidth,
+            behavior: "smooth",
+          });
+        } else {
+          scrollContainerRef.current.scrollTo({
+            left: scrollLeft - scrollAmount,
+            behavior: "smooth",
+          });
+        }
       } else {
-        scrollContainerRef.current.scrollTo({
-          left: scrollLeft + scrollAmount,
-          behavior: "smooth",
-        });
+        if (scrollLeft + scrollAmount > scrollWidth && isWrapAround) {
+          scrollContainerRef.current.scrollTo({
+            left: 0,
+            behavior: "smooth",
+          });
+        } else {
+          scrollContainerRef.current.scrollTo({
+            left: scrollLeft + scrollAmount,
+            behavior: "smooth",
+          });
+        }
       }
     }
   };
 
-  // Helper function to clone children for wrap-around effect
-  const getClonedChildren = () => {
-    if (!isWrapAround) return children; // No cloning if wrapAround is false
-    return (
-      <>
-        {React.Children.map(children, (child) => React.cloneElement(child as React.ReactElement))}
-        {children}
-        {React.Children.map(children, (child) => React.cloneElement(child as React.ReactElement))}
-      </>
-    );
-  };
 
   return (
     <>
@@ -156,7 +146,7 @@ export function HorizontalScrollable({ children, className, defaultScrollAmount,
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {getClonedChildren()} {/* Render the children passed to this component */}
+          {children} {/* Render the children passed to this component */}
         </div>
 
         {/* Right Arrow */}
