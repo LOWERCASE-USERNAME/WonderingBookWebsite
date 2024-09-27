@@ -43,8 +43,10 @@ export const IdeaCardFooter = function ({ children, className, readCounter, save
       <div className="flex items-end gap-2 mr-2 text-gray-500">
         {isReadOnly && <div className="mb-1 text-sm">{readCounter || 0} reads</div>}
         <DropdownMenu buttonIcon={menuIcon} buttonLabel="" options={[
-          { label: "Delete", icon: <Trash2 />, action: () => handleDeleteCard && handleDeleteCard() }]
-        } />
+          { label: "Delete", icon: <Trash2 />, action: () => handleDeleteCard && handleDeleteCard() }]}
+          className="translate-x-1/2"
+          direction="up"
+        />
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ interface Props {
 
 export default function Home({ params }: Props) {
   const { id } = params;
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState<object | null>(null);
   const fav = ["", "", "", "", "", ""];
 
   useEffect(() => {
@@ -44,13 +44,13 @@ export default function Home({ params }: Props) {
 
   return (
     <>
-      <Navigation />
+      <Navigation userInfo={userInfo} setUserInfo={(userInfo: object | null) => setUserInfo(userInfo)} />
       {/* Banner */}
-      {userInfo ? (
+      {/* {userInfo ? (
         <h1>Hello, {userInfo.fullname}!</h1> // Customize based on your User model
       ) : (
         <p>Loading...</p>
-      )}
+      )} */}
       <section className="h-[60vh] bg-[#f9f4ef] grid grid-cols-2 divide-x-2 divide-gray-800 border-b-2 border-b-gray-800">
         <div className="flex flex-col content-start justify-center h-full gap-4 p-4 mx-auto whitespace-pre-line">
           <p className="text-5xl tracking-wide">

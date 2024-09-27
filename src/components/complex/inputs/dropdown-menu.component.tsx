@@ -6,13 +6,15 @@ interface DropdownMenuProps extends CommonComponentProps {
   buttonIcon: React.ReactNode;
   buttonLabel?: string; // The label for the dropdown button
   options: { label: string; action: () => void; icon: React.ReactNode }[]; // Array of options with label and action
+  direction?: "up" | "down" | "left" | "right"
 }
 
 export default function DropdownMenu({
   buttonLabel,
   options,
   buttonIcon,
-  className
+  className,
+  direction = "down"
 }: DropdownMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -38,7 +40,7 @@ export default function DropdownMenu({
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
         type="button"
-        className={cn(`inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none rounded-md`, className)}
+        className={cn(`inline-flex justify-center w-full px-4 py-2 text-sm font-medium focus:outline-none rounded-md`, className)}
         onClick={toggleDropdown}
       >
         {buttonLabel}
@@ -58,7 +60,7 @@ export default function DropdownMenu({
 
       {isOpen && (
         <div
-          className="absolute right-0 z-10 w-48 mb-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 -top-full"
+          className={cn(`absolute right-0 z-10 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 ${direction === "down" && "mt-2 top-full"} ${direction === "up" && "mb-2 -top-full"}`, className)}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
@@ -76,12 +78,16 @@ export default function DropdownMenu({
                 role="menuitem"
                 tabIndex={-1}
               >
-                {option.label}
+                <div className="flex justify-around">
+                  <span>{option.icon}</span>
+                  <span className="">{option.label}</span>
+                </div>
               </button>
             ))}
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }

@@ -25,6 +25,10 @@ import {
   PhoneIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
+import { RoundedImage } from "../basic/rounded-image.component";
+import { CircleUserRound, LogOut, Menu, NotebookPen, Trash2 } from "lucide-react";
+import DropdownMenu from "../complex/inputs/dropdown-menu.component";
+import { logout } from "../../services/authService";
 
 const products = [
   {
@@ -67,7 +71,12 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Navigation() {
+interface NavigationProps {
+  userInfo: object | null;
+  setUserInfo: (userInfo: object | null) => void;
+}
+
+export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <header className="h-20 bg-white">
@@ -76,7 +85,7 @@ export default function Navigation() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <a href="/home" className="-m-1.5 p-1.5">
             <span className="sr-only">Mood Book</span>
             <div className="flex flex-row items-end w-auto h-8">
               {/* <img
@@ -98,10 +107,14 @@ export default function Navigation() {
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
+
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+          <a href="#" className="font-semibold leading-6 text-gray-900">
+            Khám phá
+          </a>
           <Popover className="relative">
             <PopoverButton className="flex items-center font-semibold leading-6 text-gray-900 gap-x-1">
-              Thư viện
+              Danh mục
               <ChevronDownIcon
                 className="flex-none w-6 h-6 text-gray-400"
                 aria-hidden="true"
@@ -160,25 +173,46 @@ export default function Navigation() {
               </PopoverPanel>
             </Transition>
           </Popover>
-
-          <a href="#" className="font-semibold leading-6 text-gray-900">
-            Danh mục
-          </a>
-          <a href="#" className="font-semibold leading-6 text-gray-900">
+          <a href="/aboutus" className="font-semibold leading-6 text-gray-900">
             Về chúng tôi
           </a>
           {/* <a href="#" className="font-semibold leading-6 text-gray-900">
             Company
           </a> */}
         </PopoverGroup>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/login" className="font-semibold leading-6 text-gray-900">
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-      </nav>
+
+        {userInfo ? (
+          <DropdownMenu
+            buttonIcon={
+              <div className="items-center hidden gap-2 lg:flex lg:flex-1 lg:justify-end">
+                <span>Hello, {userInfo.fullname}!</span>
+                <RoundedImage src="/default_user_icon.svg" className="w-10 h-10 bg-[#E1DCC5] p-1 border-none" />
+              </div>}
+            buttonLabel=""
+            options={[
+              { label: "Tài khoản", icon: <Menu />, action: () => window.open(`/account`) },
+              { label: "Thông tin", icon: <NotebookPen />, action: () => window.open(`/info`) },
+              {
+                label: "Đăng xuất", icon: <LogOut />, action: () => {
+                  logout()
+                  setUserInfo(null);
+                }
+              },
+            ]}
+            className="translate-x-1/2" />
+
+        ) : (
+          <button className="hidden lg:flex lg:flex-1 lg:justify-end ">
+            <a href="/login" className="font-semibold leading-6 text-gray-900 bg-[#E1DCC5] px-4 py-2 rounded-2xl">
+              Đăng nhập <span aria-hidden="true">&rarr;</span>
+            </a>
+          </button>
+        )
+        }
+
+      </nav >
       {/* <MobileNavigation props={{ mobileMenuOpen, setMobileMenuOpen }} /> */}
-    </header>
+    </header >
   );
 }
 
