@@ -2,12 +2,12 @@ import { CommonComponentProps } from "../../lib/props";
 import { cn } from "../../lib/utils";
 import { IdeaCardData } from "../../types/IdeaCardData";
 
-interface RoundedImageProps extends CommonComponentProps {
+interface RoundedImageProps<> extends CommonComponentProps {
   src?: string;
   id?: string;
   isReadOnly?: boolean;
   setCardImage?: (image: { data: File }) => void;
-  onUpdate?: (updatedData: Partial<IdeaCardData>) => void;
+  onUpdate?: (updatedData: Partial<object>) => void;
 }
 
 export function RoundedImage({ src, id, className, isReadOnly = true, setCardImage, onUpdate }: RoundedImageProps) {

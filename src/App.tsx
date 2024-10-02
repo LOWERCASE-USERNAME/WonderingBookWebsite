@@ -16,6 +16,8 @@ import { ProtectedRoute } from "./routes/protected_route.tsx";
 import { Login } from "./pages/auth/login.page.tsx";
 import { Register } from "./pages/auth/register.page.tsx";
 import NewPost from "./pages/studio/new-post.page.tsx";
+import Studio from "./pages/studio/studio.post.tsx";
+import { ComingSoon } from "./routes/errors/comingSoon.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +26,8 @@ const router = createBrowserRouter(
       <Route path="/register" element={<Register />} />
       {/* <Route path="/admin" element={<Admin />} />*/}
       <Route path="/home" element={<Home params={{ id: "FirstIdea" }} />} errorElement={<ErrorBoundary />} />
+      <Route path="/explore" element={<ComingSoon />} errorElement={<ErrorBoundary />} />
+      <Route path="/aboutus" element={<ComingSoon />} errorElement={<ErrorBoundary />} />
       <Route
         path="/card"
         element={
@@ -36,18 +40,25 @@ const router = createBrowserRouter(
       <Route
         path="/write"
         element={
-          <>
+          <ProtectedRoute>
             <NewPost params={{ id: "FirstIdea" }} />
-          </>
+          </ProtectedRoute>
+        }
+        errorElement={<ErrorBoundary />}
+      />
+      <Route
+        path="/studio"
+        element={
+          <ProtectedRoute>
+            <Studio params={{ id: "FirstIdea" }} />
+          </ProtectedRoute>
         }
         errorElement={<ErrorBoundary />}
       />
       <Route
         path="/detail"
         element={
-          <ProtectedRoute>
-            <PostDetail params={{ id: "FirstIdea" }} />
-          </ProtectedRoute>
+          <PostDetail params={{ id: "FirstIdea" }} />
         }
         errorElement={<ErrorBoundary />}
       />

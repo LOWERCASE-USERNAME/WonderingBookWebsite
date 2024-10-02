@@ -5,7 +5,7 @@ import Navigation from "../components/navigations/navigation";
 import { HorizontalScrollable } from "../components/scrollable/horizontal-scrollable.component";
 import Footer from "../components/navigations/footer";
 import { useEffect, useState } from "react";
-import { getCurrentUser, getUserIdFromToken } from "../services/authService";
+import { getCurrentUser, getUserIdFromToken, getUserInfo } from "../services/authService";
 import axios from "axios";
 
 interface Props {
@@ -16,44 +16,31 @@ interface Props {
 
 export default function Home({ params }: Props) {
   const { id } = params;
-  const [userInfo, setUserInfo] = useState<object | null>(null);
+  // const [userInfo, setUserInfo] = useState<object | null>(null);
+
   const fav = ["", "", "", "", "", ""];
 
-  useEffect(() => {
-    (async () => {
-      const userId = getUserIdFromToken();
+  // useEffect(() => {
+  //   (async () => {
+  //     const userId = getUserIdFromToken();
 
-      if (userId) {
-        console.log(localStorage.getItem('user-token'))
-        try {
-          const response = await axios.get(`https://localhost:7213/api/User/home/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${getCurrentUser()}`, // Pass the token in headers
-            },
-          });
-
-          setUserInfo(response.data.userInfo);
-          console.log(response.data);
-        } catch (error) {
-          console.error('Failed to fetch user info: ', error);
-        }
-
-      }
-    })();
-  }, []);
+  //     if (userId) {
+  //       try {
+  //         setUserInfo(getUserInfo(userId));
+  //       } catch (error) {
+  //         console.error('Failed to fetch user info: ', error);
+  //       }
+  //     }
+  //   })();
+  // }, []);
 
   return (
     <>
-      <Navigation userInfo={userInfo} setUserInfo={(userInfo: object | null) => setUserInfo(userInfo)} />
+      <Navigation />
       {/* Banner */}
-      {/* {userInfo ? (
-        <h1>Hello, {userInfo.fullname}!</h1> // Customize based on your User model
-      ) : (
-        <p>Loading...</p>
-      )} */}
       <section className="h-[60vh] bg-[#f9f4ef] grid grid-cols-2 divide-x-2 divide-gray-800 border-b-2 border-b-gray-800">
         <div className="flex flex-col content-start justify-center h-full gap-4 p-4 mx-auto whitespace-pre-line">
-          <p className="text-5xl tracking-wide">
+          <p className="text-5xl tracking-wide select-none">
             Đọc không giới hạn. <br /> <hr className="invisible h-4" />
             Thử ngay với các gói <span className="italic">Premium</span> ưu đãi!<br />
             <small className="text-lg tracking-normal">Chỉ từ 200k, bạn sẽ sở hữu hàng ngàn ưu đãi đi kèm</small>
@@ -65,7 +52,7 @@ export default function Home({ params }: Props) {
       {/* Welcome text */}
       <section className="flex flex-col items-center py-32 ">
         <Flower size={36} color="#e283be" />
-        <blockquote className="w-2/3 mx-auto text-4xl font-semibold leading-normal text-center">
+        <blockquote className="w-2/3 mx-auto text-4xl font-semibold leading-normal text-center select-none">
           Chào mừng đến với "MOODBOOK" - nền tảng tóm tắt sách, podcast, và audiobook hàng đầu Việt Nam.<br />
           Tiếp cận kiến thức nhanh chóng và hiệu quả. <br />
           Khám phá ngay!

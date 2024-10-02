@@ -26,9 +26,11 @@ import {
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
 import { RoundedImage } from "../basic/rounded-image.component";
-import { CircleUserRound, LogOut, Menu, NotebookPen, Trash2 } from "lucide-react";
+import { CircleUserRound, LogOut, Menu, NotebookPen, Search, Trash2 } from "lucide-react";
 import DropdownMenu from "../complex/inputs/dropdown-menu.component";
-import { logout } from "../../services/authService";
+import { getCurrentUser, logout } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const products = [
   {
@@ -78,6 +80,12 @@ interface NavigationProps {
 
 export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const token = getCurrentUser();
+  const decodedToken = token && jwtDecode(token);
+  const email = decodedToken && String(decodedToken.email);
+
   return (
     <header className="h-20 bg-white">
       <nav
@@ -93,7 +101,7 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 alt=""
               /> */}
-              <h1 className="text-4xl italic font-normal">Moodbook</h1>
+              <h1 className="text-4xl italic font-normal text-[#124135]">Moodbook</h1>
             </div>
           </a>
         </div>
@@ -107,9 +115,14 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
-
+        <div className="relative flex -translate-x-24 lg:flex-1">
+          <input
+            className="pl-8 pr-4 py-2 bg-[#a7a2a2ad]/[0.2] outline-none rounded-2xl w-72 text-sm"
+            placeholder="Ý tưởng, chủ đề và tìm kiếm" spellCheck={false} />
+          <Search className="absolute left-0 translate-x-1/2 -translate-y-1/2 top-1/2" size={16} />
+        </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <a href="#" className="font-semibold leading-6 text-gray-900">
+          <a href="/explore" className="font-semibold leading-6 text-gray-900">
             Khám phá
           </a>
           <Popover className="relative">
@@ -181,17 +194,17 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
           </a> */}
         </PopoverGroup>
 
-        {userInfo ? (
+        {token ? (
           <DropdownMenu
             buttonIcon={
               <div className="items-center hidden gap-2 lg:flex lg:flex-1 lg:justify-end">
-                <span>Hello, {userInfo.fullname}!</span>
+                <span>Hello, {email.substring(0, email.indexOf('@'))}!</span>
                 <RoundedImage src="/default_user_icon.svg" className="w-10 h-10 bg-[#E1DCC5] p-1 border-none" />
               </div>}
             buttonLabel=""
             options={[
-              { label: "Tài khoản", icon: <Menu />, action: () => window.open(`/account`) },
-              { label: "Thông tin", icon: <NotebookPen />, action: () => window.open(`/info`) },
+              { label: "Tài khoản", icon: <Menu />, action: () => navigate(`/account`) },
+              { label: "Thông tin", icon: <NotebookPen />, action: () => navigate(`/info`) },
               {
                 label: "Đăng xuất", icon: <LogOut />, action: () => {
                   logout()

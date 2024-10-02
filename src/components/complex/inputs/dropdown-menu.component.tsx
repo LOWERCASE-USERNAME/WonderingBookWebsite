@@ -3,9 +3,9 @@ import { CommonComponentProps } from "../../../lib/props";
 import { cn } from "../../../lib/utils";
 
 interface DropdownMenuProps extends CommonComponentProps {
-  buttonIcon: React.ReactNode;
+  buttonIcon?: React.ReactNode;
   buttonLabel?: string; // The label for the dropdown button
-  options: { label: string; action: () => void; icon: React.ReactNode }[]; // Array of options with label and action
+  options: { label: string; action: (event: React.MouseEvent) => void; icon: React.ReactNode }[]; // Array of options with label and action
   direction?: "up" | "down" | "left" | "right"
 }
 
@@ -19,7 +19,8 @@ export default function DropdownMenu({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (event: React.MouseEvent) => {
+    event?.stopPropagation();
     setIsOpen(!isOpen);
   };
 
@@ -70,8 +71,8 @@ export default function DropdownMenu({
             {options.map((option, index) => (
               <button
                 key={index}
-                onClick={() => {
-                  option.action(); // Execute the passed action
+                onClick={(event) => {
+                  option.action(event); // Execute the passed action
                   setIsOpen(false); // Close the dropdown after action
                 }}
                 className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900"
