@@ -8,33 +8,34 @@ import { cn } from "../../../../lib/utils";
 import { useEffect, useRef, useState } from "react";
 import RichTextEditor from "../../inputs/rich-text-editor.component";
 import { Image } from "../../../../types/Image";
+import { IdeaCard } from "../../../../types/ideaCard";
 
 interface TextCardProps extends CommonComponentProps {
-  data: IdeaCardData;
+  data: IdeaCard;
   isReadOnly?: boolean;
   onDelete?: () => void;
-  onUpdate?: (updatedData: Partial<IdeaCardData>) => void;
+  onUpdate?: (updatedData: Partial<IdeaCard>) => void;
 }
 
-export function TextCard({ className, data: { id, imageSrc, text, readCounter, saveCounter, title }, isReadOnly = true, onDelete, onUpdate }: TextCardProps) {
+export function TextCard({ className, data, isReadOnly = true, onDelete, onUpdate }: TextCardProps) {
   // const [cardImage, setCardImage] = useState<Image | null>(null);
-  const [textCount, setTextCount] = useState<number>(text?.length ?? 0);
+  const [textCount, setTextCount] = useState<number>(data.content?.length ?? 0);
 
   const editableContent = !isReadOnly && (
     <>
-      <UpperRoundedLargeImage src={imageSrc}
+      <UpperRoundedLargeImage src={data.image ?? ""}
         isReadOnly={false}
         // setCardImage={setCardImage}
         onUpdate={onUpdate}
-        id={id}
+        id={data.ideaCardId}
       />
       <input
         className="w-full px-2 text-2xl font-bold text-left outline-none" placeholder="Tiêu đề"
-        value={title}
+        value={data.title}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate && onUpdate({ title: e.target.value ?? "" })}
       />
       <RichTextEditor
-        textContent={text ?? ""}
+        textContent={data.content ?? ""}
         onUpdate={onUpdate}
         setTextCount={setTextCount}
       />
@@ -46,9 +47,9 @@ export function TextCard({ className, data: { id, imageSrc, text, readCounter, s
 
   const readonlyContent = isReadOnly && (
     <>
-      <UpperRoundedLargeImage src={imageSrc} />
-      <span className="w-full text-2xl font-bold text-left">{title}</span>
-      <RichText text={text} />
+      <UpperRoundedLargeImage src={data.image ?? ""} />
+      <span className="w-full text-2xl font-bold text-left">{data.title}</span>
+      <RichText text={data.content} />
       <IdeaCardFooter readCounter={readCounter} saveCounter={saveCounter} />
     </>
   )

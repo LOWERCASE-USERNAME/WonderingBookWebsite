@@ -1,6 +1,5 @@
 import { CommonComponentProps } from "../../lib/props";
 import { cn } from "../../lib/utils";
-import { IdeaCardData } from "../../types/IdeaCardData";
 
 interface UpperRoundedLargeImageProps extends CommonComponentProps {
   src?: string;
@@ -8,7 +7,7 @@ interface UpperRoundedLargeImageProps extends CommonComponentProps {
   isReadOnly?: boolean;
   setCardImage?: (image: { data: File }) => void;
   isUnrestricted?: boolean;
-  onUpdate?: (updatedData: Partial<IdeaCardData>) => void;
+  onUpdate?: (updatedData: Partial<object>) => void;
 }
 
 export function UpperRoundedLargeImage({ className, src, id, isReadOnly = true, setCardImage, isUnrestricted = false, onUpdate }: UpperRoundedLargeImageProps) {
@@ -20,7 +19,7 @@ export function UpperRoundedLargeImage({ className, src, id, isReadOnly = true, 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => { //only take 1 image
     // setCardImage && event.target.files && setCardImage({ data: event.target.files[0] });
-    event.target.files && onUpdate && onUpdate({ imageSrc: URL.createObjectURL(event.target.files[0]) })
+    event.target.files && onUpdate && onUpdate({ image: URL.createObjectURL(event.target.files[0]) })
   };
 
   if (src) {

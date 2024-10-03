@@ -7,39 +7,44 @@ import { EmptyCard } from "../../../basic/empty-card.component";
 import { RoundedImage } from "../../../basic/rounded-image.component";
 import { IdeaCardFooter } from "./idea-card-footer.component";
 import { Image } from "../../../../types/Image";
+import { IdeaCard } from "../../../../types/ideaCard";
 
 interface QuoteCardProps extends CommonComponentProps {
-  data: IdeaCardData;
+  data: IdeaCard;
   isReadOnly?: boolean;
   onDelete?: () => void;
-  onUpdate?: (updatedData: Partial<IdeaCardData>) => void;
+  onUpdate?: (updatedData: Partial<IdeaCard>) => void;
 }
 
-export function QuoteCard({ className, data: { id, imageSrc, text, author, readCounter, saveCounter }, isReadOnly = true, onUpdate, onDelete }: QuoteCardProps) {
+export function QuoteCard({ className, data, isReadOnly = true, onUpdate, onDelete }: QuoteCardProps) {
   // const [cardImage, setCardImage] = useState<Image | null>(null);
-  const [textCount, setTextCount] = useState<number>(text?.length ?? 0);
+  const [textCount, setTextCount] = useState<number>(data.content?.length ?? 0);
 
-  if (!isReadOnly) {
-    return (
-      <EmptyCard className={cn("w-[544px] border-2 border-black", className)}>
-        <RoundedImage src={imageSrc} isReadOnly={false}
-          // setCardImage={setCardImage}
-          onUpdate={onUpdate}
-          id={id}
-        />
-        <BlockQuote text={text} author={author} onUpdate={onUpdate} isReadOnly={false} setTextCount={setTextCount} />
-        <IdeaCardFooter isReadOnly={false}
-          textCounter={textCount}
-          handleDeleteCard={onDelete} />
-      </EmptyCard>
-    );
-  }
+  const editableContent = !isReadOnly && (
+    <>
+      <RoundedImage src={data.image ?? ""} isReadOnly={false}
+        // setCardImage={setCardImage}
+        onUpdate={onUpdate}
+        id={data.ideaCardId}
+      />
+      <BlockQuote text={data.content} author={"Me"} onUpdate={onUpdate} isReadOnly={false} setTextCount={setTextCount} />
+      <IdeaCardFooter isReadOnly={false}
+        textCounter={textCount}
+        handleDeleteCard={onDelete} />
+    </>
+  );
+
+  const readonlyContent = isReadOnly && (
+    <>
+      <RoundedImage src={data.image ?? ""} isReadOnly={true} />
+      <BlockQuote text={data.content} author={"Me"} />
+      <IdeaCardFooter readCounter={readCounter} saveCounter={saveCounter} />
+    </>
+  )
 
   return (
     <EmptyCard className={cn("w-[544px] border-2 border-black", className)}>
-      <RoundedImage src={imageSrc} isReadOnly={true} />
-      <BlockQuote text={text} author={author} />
-      <IdeaCardFooter readCounter={readCounter} saveCounter={saveCounter} />
+      {editableContent || readonlyContent}
     </EmptyCard>
   );
 }

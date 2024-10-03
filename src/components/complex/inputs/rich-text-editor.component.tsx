@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { CommonComponentProps } from '../../../lib/props';
-import { IdeaCardData } from '../../../types/IdeaCardData';
+
 
 interface RichTextEditorProps extends CommonComponentProps {
   textContent: string;
-  onUpdate?: (updatedData: Partial<IdeaCardData>) => void;
+  onUpdate?: (updatedData: Partial<object>) => void;
   setTextCount: (count: number) => void;
 }
 
 const RichTextEditor = ({ textContent, onUpdate, setTextCount }: RichTextEditorProps) => {
 
   const handleChange = (content, delta, source, editor) => {
-    onUpdate && onUpdate({ text: editor.getHTML() });
+    onUpdate && onUpdate({ content: editor.getHTML() });
     // setTextContent(editor.getHTML());
     setTextCount(editor.getLength() - 1);
     // Use editor.getText() for plain text or getContents() for delta object

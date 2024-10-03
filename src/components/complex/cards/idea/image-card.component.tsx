@@ -6,28 +6,29 @@ import { UpperRoundedLargeImage } from "../../../basic/upper-rounded-large-image
 import { cn } from "../../../../lib/utils";
 import { useState } from "react";
 import { Image } from "../../../../types/Image";
+import { IdeaCard } from "../../../../types/ideaCard";
 
 interface ImageCardProps extends CommonComponentProps {
-  data: IdeaCardData;
+  data: IdeaCard;
   isReadOnly?: boolean;
   onDelete?: () => void;
-  onUpdate?: (updatedData: Partial<IdeaCardData>) => void;
+  onUpdate?: (updatedData: Partial<IdeaCard>) => void;
 }
 
-export function ImageCard({ className, data: { id, imageSrc, readCounter, saveCounter, title }, isReadOnly = true, onDelete, onUpdate }: ImageCardProps) {
+export function ImageCard({ className, data, isReadOnly = true, onDelete, onUpdate }: ImageCardProps) {
   // const [cardImage, setCardImage] = useState<Image | null>(null);
 
   const editableContent = !isReadOnly && (
     <>
-      <UpperRoundedLargeImage src={imageSrc}
+      <UpperRoundedLargeImage src={data.image ?? ""}
         isReadOnly={false}
         // setCardImage={setCardImage}
         isUnrestricted={true}
         onUpdate={onUpdate}
-        id={id}
+        id={data.ideaCardId}
       />
       <input className="w-full px-2 text-2xl font-bold text-left outline-none" placeholder="Tiêu đề"
-        value={title}
+        value={data.title}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate && onUpdate({ title: e.target.value ?? "" })} />
       <IdeaCardFooter isReadOnly={false}
         handleDeleteCard={onDelete} />
@@ -36,8 +37,8 @@ export function ImageCard({ className, data: { id, imageSrc, readCounter, saveCo
 
   const readonlyContent = isReadOnly && (
     <>
-      <UpperRoundedLargeImage src={imageSrc} className="h-fit" isUnrestricted={true} />
-      <span className="w-full text-2xl font-bold text-left">{title}</span>
+      <UpperRoundedLargeImage src={data.image ?? ""} className="h-fit" isUnrestricted={true} />
+      <span className="w-full text-2xl font-bold text-left">{data.title}</span>
       <IdeaCardFooter readCounter={readCounter} saveCounter={saveCounter} />
     </>
   )

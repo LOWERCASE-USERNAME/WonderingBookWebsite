@@ -19,7 +19,7 @@ export function RoundedImage({ src, id, className, isReadOnly = true, setCardIma
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => { //only take 1 image
     // setCardImage && event.target.files && setCardImage({ data: event.target.files[0] });
-    event.target.files && onUpdate && onUpdate({ imageSrc: URL.createObjectURL(event.target.files[0]) })
+    event.target.files && onUpdate && onUpdate({ image: URL.createObjectURL(event.target.files[0]) })
   };
 
   if (src) {
