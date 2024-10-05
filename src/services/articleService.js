@@ -33,9 +33,13 @@ export const postArticle = async (article) => {
   return response.data;
 };
 export const putArticle = async (article) => {
-  const response = await axios.put(`${API_URL}/${article.articleId}`, article, {
-    headers: DEFAULT_HEADER,
-  });
+  const response = await axios.putForm(
+    `${API_URL}/${article.get("articleId")}`,
+    article,
+    {
+      headers: DEFAULT_HEADER,
+    },
+  );
   return response.data;
 };
 export const deleteArticle = (id) => {};

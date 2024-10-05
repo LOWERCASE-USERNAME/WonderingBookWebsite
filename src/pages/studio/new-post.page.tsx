@@ -16,6 +16,7 @@ import { postIdeaCardBulk, putIdeaCardBulk } from "../../services/ideaCardServic
 import { Article } from "../../types/article";
 import { IdeaCard } from "../../types/ideaCard";
 import { IdeaCardType } from "../../types/ideaCardType";
+import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
 
 interface Props {
   params: {
@@ -37,7 +38,7 @@ export default function NewPost({ params }: Props) {
   const location = useLocation();
   const initData: Article = location.state || {};
   const [postData, setPostData] = useState<Article>(initData);
-  const [userInfo, setUserInfo] = useState<object | null>(null);
+  const { userInfo, setUserInfo } = useFetchUserInfo();
   const [draftCards, setDraftCards] = useState<IdeaCard[]>([]);
   const titleRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
@@ -73,15 +74,25 @@ export default function NewPost({ params }: Props) {
 
       await Promise.all([Promise.all(createPromise), Promise.all(updatePromise)]);
 
-      const [responseCreateIdeaCards, responseUpdateIdeaCards] = await Promise.all([
+      const [responseCreateIdeaCards, responseUpdateIdeaCards, responseArticle] = await Promise.all([
         !createFormData.entries().next().done && postIdeaCardBulk(createFormData),
-        !updateFormData.entries().next().done && putIdeaCardBulk(updateFormData)
+        !updateFormData.entries().next().done && putIdeaCardBulk(updateFormData),
+        (async () => {
+          const articleFormData = new FormData();
+          articleFormData.append("articleId", postData.articleId);
+          articleFormData.append("title", postData.title);
+          articleFormData.append("curatorNote", postData.curatorNote.length != 0 ? postData.curatorNote : "None");
+          articleFormData.append("miscAuthor", String(postData.miscAuthor));
+
+          if (postData.image) {
+            const response = await fetch(postData.image);
+            const blob = await response.blob();
+            articleFormData.append("image", blob);
+          }
+          putArticle(articleFormData)
+        })(),
       ]);
 
-      console.log(responseCreateIdeaCards);
-      console.log(responseUpdateIdeaCards);
-
-      // console.log(response);
       // if (response != null) {
       //   navigate("/write", { state: {} });
       // }
@@ -130,13 +141,9 @@ export default function NewPost({ params }: Props) {
   };
 
   const handleMoveCard = (id: string, direction: "up" | "down") => {
-    setDraftCards((prevCards) =>
-      prevCards.map((card) => (card.ideaCardId === id ? { ...card, ...updatedCardData } : card))
-    );
   }
 
   const handleResetCard = (id: string) => {
-
   }
 
   const handleDisplayHelp = (cardType: "text" | "image" | "quote") => {
@@ -207,6 +214,7 @@ export default function NewPost({ params }: Props) {
             placeholder="Tiêu đề" spellCheck={false} ref={titleRef} rows={1} />
           <h2 className="mt-4 italic">
             By <input className="px-1 text-lg italic font-bold outline-none"
+              value={String(postData.miscAuthor)}
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleUpdatePost(id ?? postData.articleId, { miscAuthor: e.target.value })}
               placeholder="Tác giả" spellCheck={false} />
           </h2>

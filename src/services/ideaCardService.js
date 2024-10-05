@@ -14,9 +14,9 @@ export const getIdeaCards = async () => {
 };
 
 export const getIdeaCardsByArticleId = async (articleId) => {
-  // const response = await axios.get(`${API_URL}/user/${userId}`, {
-  //   headers: DEFAULT_HEADER,
-  // });
+  const response = await axios.get(`${API_URL}/get-by-article/${articleId}`, {
+    headers: DEFAULT_HEADER,
+  });
   return response.data;
 };
 

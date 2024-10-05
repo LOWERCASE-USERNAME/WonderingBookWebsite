@@ -87,7 +87,7 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
   const email = decodedToken && String(decodedToken.email);
 
   return (
-    <header className="h-20 bg-white">
+    <header className="h-20 bg-[#FCF6EF]">
       <nav
         className="flex items-center justify-between h-full mx-auto max-w-7xl lg:px-8"
         aria-label="Global"

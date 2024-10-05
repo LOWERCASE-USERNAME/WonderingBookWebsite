@@ -11,15 +11,18 @@ import { Image } from "../../../../types/Image";
 import { IdeaCard } from "../../../../types/ideaCard";
 
 interface TextCardProps extends CommonComponentProps {
+  id?: string;
   data: IdeaCard;
   isReadOnly?: boolean;
   onDelete?: () => void;
   onUpdate?: (updatedData: Partial<IdeaCard>) => void;
 }
 
-export function TextCard({ className, data, isReadOnly = true, onDelete, onUpdate }: TextCardProps) {
+export function TextCard({ className, data, isReadOnly = true, onDelete, onUpdate, id }: TextCardProps) {
   // const [cardImage, setCardImage] = useState<Image | null>(null);
   const [textCount, setTextCount] = useState<number>(data.content?.length ?? 0);
+  const readCounter = 0;
+  const saveCounter = 0;
 
   const editableContent = !isReadOnly && (
     <>
@@ -30,7 +33,7 @@ export function TextCard({ className, data, isReadOnly = true, onDelete, onUpdat
         id={data.ideaCardId}
       />
       <input
-        className="w-full px-2 text-2xl font-bold text-left outline-none" placeholder="Tiêu đề"
+        className="w-full px-2 text-3xl font-bold text-left outline-none" placeholder="Tiêu đề"
         value={data.title}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate && onUpdate({ title: e.target.value ?? "" })}
       />
@@ -55,7 +58,7 @@ export function TextCard({ className, data, isReadOnly = true, onDelete, onUpdat
   )
 
   return (
-    <EmptyCard className={cn("w-[544px] border-2 border-black", className)}>
+    <EmptyCard id={id} className={cn("w-[544px] border-black shadow-[0px_20px_20px_10px_#00000024]", className)}>
       {editableContent || readonlyContent}
     </EmptyCard >
   );

@@ -56,9 +56,9 @@ const router = createBrowserRouter(
         errorElement={<ErrorBoundary />}
       />
       <Route
-        path="/detail"
+        path="/detail/:id"
         element={
-          <PostDetail params={{ id: "FirstIdea" }} />
+          <PostDetail />
         }
         errorElement={<ErrorBoundary />}
       />

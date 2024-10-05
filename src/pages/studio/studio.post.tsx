@@ -12,6 +12,7 @@ import { getArticlesByUserId, postArticle, putArticle } from "../../services/art
 import { getUserIdFromToken, getUserInfo } from "../../services/authService";
 import { RoundedImage } from "../../components/basic/rounded-image.component";
 import DropdownMenu from "../../components/complex/inputs/dropdown-menu.component";
+import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
 
 interface Props {
   params: {
@@ -37,28 +38,19 @@ const sources = [
 export default function Studio({ params }: Props) {
   const { id } = params;
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState<object | null>(null);
+  const { userInfo, setUserInfo } = useFetchUserInfo();
   const [draftPosts, setDraftPosts] = useState<PostData[]>([]);
 
   // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await getArticlesByUserId(userInfo?.userId);
-  //     setDraftPosts(response);
+  //   const fetchUserInfo = async () => {
+  //     const userId = getUserIdFromToken();
+  //     if (userId) {
+  //       const response = await getUserInfo(userId);
+  //       setUserInfo(response);
+  //     }
   //   }
-
-  //   fetchData();
+  //   fetchUserInfo();
   // }, [])
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const userId = getUserIdFromToken();
-      if (userId) {
-        const response = await getUserInfo(userId);
-        setUserInfo(response);
-      }
-    }
-    fetchUserInfo();
-  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
