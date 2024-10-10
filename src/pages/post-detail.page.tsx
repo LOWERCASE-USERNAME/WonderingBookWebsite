@@ -26,8 +26,8 @@ export default function PostDetail() {
     }
 
     const fetchData = async () => {
-      const response = await getIdeaCardsByArticleId(id);
-      setIdeaCards(response);
+      const response: IdeaCard[] = await getIdeaCardsByArticleId(id);
+      setIdeaCards(response.sort((a, b) => Number(a.order) - Number(b.order)) ?? []);
     }
 
     fetchData();
@@ -91,6 +91,7 @@ export default function PostDetail() {
             <div className="flex flex-col items-center justify-center gap-8 h-fit">
               {ideaCards.map((card, idx) => handleRenderCard(card, idx))}
             </div>
+            <div className="h-96"></div>
           </section>
           <aside className="col-span-2 col-start-5">
             <CuratorCard

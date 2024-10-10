@@ -13,6 +13,7 @@ import { getUserIdFromToken, getUserInfo } from "../../services/authService";
 import { RoundedImage } from "../../components/basic/rounded-image.component";
 import DropdownMenu from "../../components/complex/inputs/dropdown-menu.component";
 import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
+import { Article } from "../../types/article";
 
 interface Props {
   params: {
@@ -39,7 +40,7 @@ export default function Studio({ params }: Props) {
   const { id } = params;
   const navigate = useNavigate();
   const { userInfo, setUserInfo } = useFetchUserInfo();
-  const [draftPosts, setDraftPosts] = useState<PostData[]>([]);
+  const [draftPosts, setDraftPosts] = useState<Article[]>([]);
 
   // useEffect(() => {
   //   const fetchUserInfo = async () => {
@@ -65,14 +66,14 @@ export default function Studio({ params }: Props) {
 
   const handleAddPost = async (source) => {
     try {
-      const response = await postArticle({
-        userId: userInfo?.id,
-        title: "",
-      });
+      const formData = new FormData();
+      formData.append("userId", userInfo?.id);
+      formData.append("title", String(null));
 
-      console.log(response);
+      const response = await postArticle(formData);
+
       if (response != null) {
-        navigate("/write", { state: {} });
+        navigate(`/write/${response.articleId}`, { state: response });
       }
     } catch (error) {
       console.error("Failed to create post", error);
@@ -82,8 +83,8 @@ export default function Studio({ params }: Props) {
   const handleDeleteCard = async (id: string) => {
   };
 
-  const handleUpdatePost = async (postData: PostData) => {
-    navigate("/write", {
+  const handleUpdatePost = async (postData: Article) => {
+    navigate(`/write/${postData.articleId}`, {
       state: {
         ...postData,
         author: postData.miscAuthor
@@ -96,7 +97,7 @@ export default function Studio({ params }: Props) {
       <nav className="h-12">
         <Navigation userInfo={userInfo} setUserInfo={setUserInfo} />
       </nav>
-      <section className="flex flex-col p-4 bg-white">
+      <section className="flex flex-col p-4">
         <div className="select-none">
           <h1 className="text-5xl tracking-wide">Tạo bài viết mới với MoodBook Studio</h1>
           <h2 className="mt-2 text-2xl italic">Bắt đầu bằng một mẫu trống không hoặc chọn từ nguồn có sẵn</h2>
@@ -130,20 +131,20 @@ export default function Studio({ params }: Props) {
             ))}
 
           </div>
-          <div className="col-span-3 bg-blue-300">
+          <div className="col-span-3">
             <h3 className="p-4 mt-12 text-xl">Các bài viết</h3>
-            <div className="flex flex-col items-center justify-center gap-8 h-fit">
-              {draftPosts.map((draftPost: PostData, idx) =>
-                <EmptyCard className="flex flex-row justify-between w-full mb-8 rounded-none" key={idx}
+            <div className="flex flex-col items-center justify-center h-fit">
+              {draftPosts.map((draftPost: Article, idx) =>
+                <EmptyCard className="flex flex-row justify-between w-full mb-8 border-2 border-black rounded-none" key={idx}
                   onClick={() => handleUpdatePost(draftPost)}>
                   <RoundedImage
                     className="mx-8 rounded-xl"
-                    src="/default_post_image.png"
+                    src={draftPost.image ?? "/default_post_image.png"}
                     isReadOnly={false}
                   />
                   <div className="flex flex-col self-start flex-1">
                     <span className="text-2xl font-semibold">{draftPost.title != "" ? draftPost.title : "Không tiêu đề"}</span>
-                    <span className="mt-2 italic">By <span className="text-lg font-bold">{draftPost.author ?? "Không tác giả"}</span></span>
+                    <span className="mt-2 italic">By <span className="text-lg font-bold">{draftPost.miscAuthor ?? "Không tác giả"}</span></span>
                     <span className="mt-6">0 idea</span>
                   </div>
                   <DropdownMenu

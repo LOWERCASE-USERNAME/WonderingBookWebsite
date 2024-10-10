@@ -38,7 +38,7 @@ const router = createBrowserRouter(
         errorElement={<ErrorBoundary />}
       />
       <Route
-        path="/write"
+        path="/write/:id"
         element={
           <ProtectedRoute>
             <NewPost params={{ id: "FirstIdea" }} />

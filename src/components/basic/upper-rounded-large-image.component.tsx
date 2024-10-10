@@ -25,7 +25,7 @@ export function UpperRoundedLargeImage({ className, src, id, isReadOnly = true, 
   if (src) {
     if (isUnrestricted) {
       return (
-        <img className={cn("object-cover min-w-[544px] h-fit rounded-t-2xl -mt-4 px-1", className)} src={src} />
+        <img className={cn("object-cover min-w-[544px] h-fit max-h-96 rounded-t-2xl -mt-4 px-1", className)} src={src} />
       )
     }
 

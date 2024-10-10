@@ -4,13 +4,12 @@ import { Flower } from "lucide-react";
 import Navigation from "../components/navigations/navigation";
 import { HorizontalScrollable } from "../components/scrollable/horizontal-scrollable.component";
 import Footer from "../components/navigations/footer";
-import { useEffect, useState } from "react";
-import { getCurrentUser, getUserIdFromToken, getUserInfo } from "../services/authService";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useFetchUserInfo } from "../hooks/useFetchUserInfo";
 import { Article } from "../types/article";
 import { getArticles } from "../services/articleService";
 import { Link } from "react-router-dom";
+import { dateFormat } from "../lib/utils";
 
 interface Props {
   params: {
@@ -87,35 +86,35 @@ export default function Home({ params }: Props) {
           <h2 className="mb-4 text-3xl">Một số loại sách yêu thích</h2>
           <button className="absolute bottom-0 font-semibold underline right-4 underline-offset-2">Xem thêm</button>
         </div>
-        <HorizontalScrollable className="flex overflow-x-auto gap-x-8 cursor-grab active:cursor-grabbing" defaultScrollAmount={300}>
+        <HorizontalScrollable className="flex overflow-x-hidden gap-x-8 cursor-grab active:cursor-grabbing" defaultScrollAmount={350}>
           {posts.map((post, idx) =>
             <Link
               to={`/detail/${post.articleId}`}
               state={post}
               key={idx}
-              className="relative cursor-auto grid h-[400px] flex-[0_0_300px] w-full max-w-[300px] flex-col items-end justify-center overflow-hidden rounded-xl bg-white bg-clip-border text-center text-gray-700 select-none">
-              <div
-                style={{ backgroundImage: `url('${post.image ?? "default_post_image.png"}')` }}
-                className={`absolute inset-0 m-0 h-full w-full overflow-hidden rounded-none bg-transparent bg-cover bg-clip-border bg-center text-gray-700 shadow-none`}>
-                <div className="absolute bottom-0 w-full h-2/3 to-bg-black-10 bg-gradient-to-t from-black/100 via-black/80"></div>
-              </div>
-              <div className="relative">
-                <div className="flex items-end ml-4">
-                  <img alt="Tran Hoang Giang"
-                    src="https://images.unsplash.com/photo-1591605555749-d25cfd47e981?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    className="relative inline-block h-6 w-6 !rounded-full border-2 border-white object-cover object-center" />
-                  <h5 className="inline-block ml-2 font-sans antialiased font-light leading-snug tracking-tight text-gray-200 cursor-pointer">
-                    - {post.miscAuthor}
-                  </h5>
+              className="relative flex-[0_0_fit-content] w-fit max-w-[400px] bg-white cursor-auto select-none"
+            >
+              <article className="overflow-hidden transition border-2 border-black rounded-lg shadow hover:shadow-lg">
+                <div className="flex justify-center">
+                  <img
+                    src={post.image ?? "default_post_image.png"}
+                    className="object-cover h-56 w-fit"
+                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                      e.currentTarget.src = "image_not_found.png"; // Fallback image
+                    }}
+                  />
                 </div>
-
-                <h3 className="cursor-pointer block m-4 mt-2 mb-0 text-xl font-sans font-medium leading-[1.1] tracking-normal text-white antialiased text-left">
-                  {post.title}
-                </h3>
-                <div className="p-2 text-sm font-thin text-right text-slate-200">
-                  8 ideas - 1.35k reads
+                <div className="p-4 bg-white sm:p-6">
+                  <time dateTime="2022-10-10" className="block text-xs text-gray-500">{"Tạo ngày: " + dateFormat(post.dateCreated)}</time>
+                  <h2 className="mt-0.5 text-xl text-gray-900">{post.title} - {post.miscAuthor}</h2>
+                  <p className="mt-2 text-gray-500 line-clamp-3 text-sm/relaxed">
+                    {post.curatorNote}
+                  </p>
+                  <div className="p-2 text-xs font-light text-right">
+                    <span>8 ideas</span> - <span>1.35k reads</span>
+                  </div>
                 </div>
-              </div>
+              </article>
             </Link>
           )}
         </HorizontalScrollable>

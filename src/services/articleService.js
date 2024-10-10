@@ -27,7 +27,7 @@ export const getArticle = async (id) => {
   return response.data;
 };
 export const postArticle = async (article) => {
-  const response = await axios.post(`${API_URL}`, article, {
+  const response = await axios.postForm(`${API_URL}`, article, {
     headers: DEFAULT_HEADER,
   });
   return response.data;
