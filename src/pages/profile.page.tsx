@@ -16,11 +16,11 @@ export default function Profile() {
           <span className="text-gray-800">Gói của bạn đang sử dụng</span>
           <h1 className="mt-2 text-4xl">Moodbook Free</h1>
           <span className="text-sm italic">Nâng cấp gói để trải nghiệm tốt hơn thôi</span>
-          <button
+          <Link
             to="premium"
-            className="block px-6 py-2 mt-12 text-white bg-pink-400 rounded-full hover:bg-pink-500 ring-pink-400">
+            className="block px-6 py-2 mt-12 text-white bg-pink-400 rounded-full hover:bg-pink-500 ring-pink-400 w-fit">
             Mua Premier ngay
-          </button>
+          </Link>
           <Outlet />
         </EmptyCard>
 

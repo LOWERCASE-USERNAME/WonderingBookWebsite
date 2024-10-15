@@ -35,19 +35,10 @@ const router = createBrowserRouter(
       <Route path="/profile" element={<Profile />} errorElement={<ErrorBoundary />} />
       <Route path="/profile/premium" element={<PremiumOffer />} errorElement={<ErrorBoundary />} />
       <Route
-        path="/card"
-        element={
-          <>
-            <BookCard />
-          </>
-        }
-        errorElement={<ErrorBoundary />}
-      />
-      <Route
         path="/write/:id"
         element={
           <ProtectedRoute>
-            <NewPost params={{ id: "FirstIdea" }} />
+            <NewPost />
           </ProtectedRoute>
         }
         errorElement={<ErrorBoundary />}
@@ -56,7 +47,7 @@ const router = createBrowserRouter(
         path="/studio"
         element={
           <ProtectedRoute>
-            <Studio params={{ id: "FirstIdea" }} />
+            <Studio />
           </ProtectedRoute>
         }
         errorElement={<ErrorBoundary />}

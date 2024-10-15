@@ -35,4 +35,7 @@ export const putIdeaCardBulk = async (ideaCardList) => {
   return response.data;
 };
 
-export const deleteIdeaCard = (id) => {};
+export const deleteIdeaCard = async (id) => {
+  const response = await axios.delete(`${API_URL}/${id}`);
+  return response.data;
+};

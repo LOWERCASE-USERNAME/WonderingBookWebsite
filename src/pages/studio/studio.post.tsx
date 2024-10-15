@@ -64,6 +64,7 @@ export default function Studio() {
         //TODO: add image, postArticle at BE is receiving Blob, while Google Book API return image URL
         formData.append("title", selectedBook.title);
         formData.append("miscAuthor", selectedBook.authors);
+        formData.append("defaultImage", selectedBook.imageLink);
       }
     } else {
       formData.append("title", String(null));

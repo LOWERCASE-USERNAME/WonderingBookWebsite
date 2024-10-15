@@ -12,7 +12,7 @@ import { RoundedImage } from "../../components/basic/rounded-image.component";
 import { GlowingButton } from "../../components/basic/button";
 import { SideWidget } from "../../components/complex/widgets/side-widget";
 import { getArticle, putArticle } from "../../services/articleService";
-import { postIdeaCardBulk, putIdeaCardBulk } from "../../services/ideaCardService";
+import { deleteIdeaCard, postIdeaCardBulk, putIdeaCardBulk } from "../../services/ideaCardService";
 import { Article } from "../../types/article";
 import { IdeaCard } from "../../types/ideaCard";
 import { IdeaCardType } from "../../types/ideaCardType";
@@ -20,16 +20,7 @@ import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
 import { cn } from "../../lib/utils";
 import CustomLoader from "../../components/basic/loader";
 
-interface Props {
-  params: {
-    id: string;
-  };
-}
-
-
-
-export default function NewPost({ params }: Props) {
-  const { id } = params;
+export default function NewPost() {
   const navigate = useNavigate();
   const location = useLocation();
   const initData: Article = location.state || {};
@@ -43,7 +34,7 @@ export default function NewPost({ params }: Props) {
     { id: `moveup-#${id}`, name: `card-widget-#${id}`, icon: <ChevronsUp />, handleClick: (e: React.MouseEvent) => handleMoveCard(e, id, "up") },
     { id: `movedown-#${id}`, name: `card-widget-#${id}`, icon: <ChevronsDown />, handleClick: (e: React.MouseEvent) => handleMoveCard(e, id, "down") },
     { id: `help-#${id}`, name: `card-widget-#${id}`, icon: <HelpCircle />, handleClick: () => handleDisplayHelp("text") },
-    { id: `delete-#${id}`, name: `card-widget-#${id}`, icon: <Trash2 />, handleClick: () => false && handleDeleteCard(id) },
+    { id: `delete-#${id}`, name: `card-widget-#${id}`, icon: <Trash2 />, handleClick: () => handleDeleteCard(id) },
   ];
 
   useEffect(() => {
@@ -136,9 +127,10 @@ export default function NewPost({ params }: Props) {
     }]);
   }
 
-  //TODO: implement this
   const handleDeleteCard = (id: string) => {
-    setDraftCards(draftCards.filter(card => card.articleId !== id));
+    deleteIdeaCard(id)
+      .then(() => setDraftCards(draftCards.filter(card => card.ideaCardId !== id)));
+    // setDraftCards(draftCards.filter(card => card.articleId !== id));s
   };
 
   const handleUpdateCard = (id: string, updatedCardData: Partial<IdeaCard>) => {
