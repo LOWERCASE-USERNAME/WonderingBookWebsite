@@ -45,7 +45,9 @@ export function PostImageCard({ children, className, imageSrc }: PostImageCardPr
           className="relative h-36 -top-1/2"
           src={imageSrc}
           ref={imageRef}
-
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            e.currentTarget.src = "image_not_found.png"; // Fallback image
+          }}
         />
       </div>
     </EmptyCard >

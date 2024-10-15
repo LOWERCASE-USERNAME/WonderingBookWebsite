@@ -26,7 +26,7 @@ import {
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
 import { RoundedImage } from "../basic/rounded-image.component";
-import { CircleUserRound, LogOut, Menu, NotebookPen, Search, Trash2 } from "lucide-react";
+import { CircleUserRound, LogOut, Menu, NotebookPen, PenLine, Search, Trash2 } from "lucide-react";
 import DropdownMenu from "../complex/inputs/dropdown-menu.component";
 import { getCurrentUser, logout } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
@@ -125,7 +125,7 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
           <a href="/explore" className="font-semibold leading-6 text-gray-900">
             Khám phá
           </a>
-          <Popover className="relative">
+          {/* <Popover className="relative">
             <PopoverButton className="flex items-center font-semibold leading-6 text-gray-900 gap-x-1">
               Danh mục
               <ChevronDownIcon
@@ -185,7 +185,10 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
                 </div>
               </PopoverPanel>
             </Transition>
-          </Popover>
+          </Popover> */}
+          <a href="/community" className="font-semibold leading-6 text-gray-900">
+            Cộng đồng
+          </a>
           <a href="/aboutus" className="font-semibold leading-6 text-gray-900">
             Về chúng tôi
           </a>
@@ -203,13 +206,16 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
               </div>}
             buttonLabel=""
             options={[
-              { label: "Tài khoản", icon: <Menu />, action: () => navigate(`/account`) },
-              { label: "Thông tin", icon: <NotebookPen />, action: () => navigate(`/info`) },
+              { label: "Quản lý nội dung" },
+              { label: "Tạo bài viết", icon: <PenLine size={16} strokeWidth={2.5} />, action: () => navigate(`/studio`) },
+              { label: "Thông tin", icon: <NotebookPen size={16} strokeWidth={2.5} />, action: () => navigate(`/info`) },
+              { label: "Quản lý tài khoản" },
+              { label: "Hồ sơ", icon: <Menu size={16} strokeWidth={2.5} />, action: () => navigate(`/profile`) },
               {
-                label: "Đăng xuất", icon: <LogOut />, action: () => {
+                label: "Đăng xuất", icon: <LogOut size={16} strokeWidth={2.5} />, action: () => {
                   logout()
                   setUserInfo(null);
-                }
+                }, className: "text-red-700 hover:bg-red-100 hover:text-red-900"
               },
             ]}
             className="translate-x-1/2" />

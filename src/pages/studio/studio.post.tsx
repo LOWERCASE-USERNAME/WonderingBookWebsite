@@ -1,57 +1,44 @@
 import { SquarePlus, ChevronRight, BookText, Trash2, EllipsisVertical } from "lucide-react";
 import { EmptyCard } from "../../components/basic/empty-card.component";
 import Navigation from "../../components/navigations/navigation";
-import { IdeaCardData } from "../../types/IdeaCardData";
 import { useEffect, useState } from "react";
 import React from "react";
-import { v4 as uuidv4 } from 'uuid';
-import { PostData } from "../../types/PostData";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { getArticlesByUserId, postArticle, putArticle } from "../../services/articleService";
-import { getUserIdFromToken, getUserInfo } from "../../services/authService";
+import { getArticlesByUserId, postArticle } from "../../services/articleService";
 import { RoundedImage } from "../../components/basic/rounded-image.component";
 import DropdownMenu from "../../components/complex/inputs/dropdown-menu.component";
 import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
 import { Article } from "../../types/article";
-
-interface Props {
-  params: {
-    id: string;
-  };
-}
+import { Modal } from "../../components/basic/modal.component";
+import { GoogleBooksAutocomplete } from "../../components/complex/inputs/google-book-autocomplete.component";
+import { GoogleBook } from "../../types/googleBook";
 
 const sources = [
   {
+    "id": "empty",
     "label": "Bài viết mới",
     "description": "Mẫu bài viết trống, thỏa sức sáng tạo",
     "icon": <SquarePlus size={28} />,
-    "state": {}
+    // "state": {}
   },
   {
+    "id": "book",
     "label": "Nguồn sách",
     "description": "Bạn lấy cảm hứng từ các cuốn sách",
     "icon": <BookText size={28} />,
-    "state": {}
+    // "state": {}
   }
 ];
 
-export default function Studio({ params }: Props) {
-  const { id } = params;
+export default function Studio() {
   const navigate = useNavigate();
   const { userInfo, setUserInfo } = useFetchUserInfo();
   const [draftPosts, setDraftPosts] = useState<Article[]>([]);
+  const [delConfirmModalOpen, setDelConfirmModalOpen] = useState(false);
+  const [bookSourceModalOpen, setBookSourceModalOpen] = useState(false);
+  // const [bookSource, setBookSource] = useState<object | null>(null);
+  const [selectedBook, setSelectedBook] = useState<GoogleBook | null>(null);
 
-  // useEffect(() => {
-  //   const fetchUserInfo = async () => {
-  //     const userId = getUserIdFromToken();
-  //     if (userId) {
-  //       const response = await getUserInfo(userId);
-  //       setUserInfo(response);
-  //     }
-  //   }
-  //   fetchUserInfo();
-  // }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,11 +51,25 @@ export default function Studio({ params }: Props) {
     fetchData();
   }, [userInfo])
 
-  const handleAddPost = async (source) => {
-    try {
-      const formData = new FormData();
-      formData.append("userId", userInfo?.id);
+  const handleAddPost = async (source: string) => {
+    const formData = new FormData();
+    formData.append("userId", userInfo?.id);
+
+    if (source === "book") {
+      if (selectedBook == null) {
+        setBookSourceModalOpen(true);
+        return;
+      } else {
+        // TODO: add Book by API if come from Book Source
+        //TODO: add image, postArticle at BE is receiving Blob, while Google Book API return image URL
+        formData.append("title", selectedBook.title);
+        formData.append("miscAuthor", selectedBook.authors);
+      }
+    } else {
       formData.append("title", String(null));
+    }
+
+    try {
 
       const response = await postArticle(formData);
 
@@ -109,7 +110,7 @@ export default function Studio({ params }: Props) {
           <div className="grid grid-cols-3">
             {sources.map(source => (
               <EmptyCard className="mx-auto h-fit flex flex-col w-48 bg-[#F9F4EF] rounded-none overflow-hidden border-black group p-0 gap-0 hover:border-2"
-                onClick={() => handleAddPost(source)}>
+                onClick={() => handleAddPost(source.id)}>
                 <div className="relative w-full flex-grow-[5] group-hover:bg-red-100 duration-500 ease-in-out h-32">
                   <div className="absolute p-8 -translate-x-6 -translate-y-6 bg-red-100 rounded-full left-1 top-1">
                     {source.icon}
@@ -152,7 +153,8 @@ export default function Studio({ params }: Props) {
                     buttonIcon={<EllipsisVertical />} options={[{
                       label: "Delete", icon: <Trash2 />, action: (event: React.MouseEvent) => {
                         event.stopPropagation();
-                        console.log("Delete " + draftPost.title)
+                        setDelConfirmModalOpen(true);
+                        // console.log("Delete " + draftPost.title)
                       }
                     }]} />
                 </EmptyCard>
@@ -162,10 +164,57 @@ export default function Studio({ params }: Props) {
 
 
         </section>
-        <aside className="w-full col-span-2 col-start-4">
-          {/* {sideContent} */}
+        <aside className="flex justify-center w-full col-span-2 col-start-4">
+          <EmptyCard className="w-2/3 bg-orange-100 h-fit">
+            <h2>Hành trình sáng tác của bạn bắt đầu từ đây</h2>
+            <p>Nếu bạn muốn bắt đầu tóm tắt từ một cuốn sách đã xuất bản, hãy thử tìm kiếm với "Nguồn sách". Nếu không, hãy tạo một mẫu trống với "Bài viết mới"</p>
+          </EmptyCard>
         </aside>
       </div >
+      <Modal
+        open={delConfirmModalOpen}
+        cancelFn={() => setDelConfirmModalOpen(false)}
+        primaryFn={() => {
+          alert(" You deleted everything");
+          setDelConfirmModalOpen(false);
+        }}
+        variant="danger"
+      />
+
+      <Modal
+        open={bookSourceModalOpen}
+        titleString="Nguồn sách"
+        contentNode={
+          <div className="my-4">
+            <GoogleBooksAutocomplete handleBookChange={(newBook) => setSelectedBook(newBook)} className="" />
+            {selectedBook &&
+              <div className="mt-4">
+                <div className="flex gap-4">
+                  <img className="w-36" src={selectedBook.imageLink} />
+                  <div className="flex flex-col gap-2">
+                    <p>ISBN: {selectedBook.isbn}</p>
+                    <p>Title: {selectedBook.title}</p>
+                    <p>Authors: {selectedBook.authors}</p>
+                    <p>Publisher: {selectedBook.publisher}</p>
+                    <p>PublishedDate: {selectedBook.publishedDate}</p>
+                    <p>PageCount: {selectedBook.pageCount}</p>
+                  </div>
+                </div>
+                <p className="mt-4 line-clamp-6" >Description: {selectedBook.description}</p>
+              </div>
+            }
+          </div>
+        }
+        cancelFn={() => {
+          setSelectedBook(null);
+          setBookSourceModalOpen(false)
+        }}
+        primaryFn={() => {
+          setBookSourceModalOpen(false);
+          handleAddPost("book");
+        }}
+        size="lg"
+      />
     </div >
   );
 }

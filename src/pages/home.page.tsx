@@ -1,6 +1,6 @@
 'use client'
 
-import { Flower } from "lucide-react";
+import { Flower, SquareCheck } from "lucide-react";
 import Navigation from "../components/navigations/navigation";
 import { HorizontalScrollable } from "../components/scrollable/horizontal-scrollable.component";
 import Footer from "../components/navigations/footer";
@@ -22,6 +22,7 @@ export default function Home({ params }: Props) {
   const { userInfo, setUserInfo } = useFetchUserInfo();
   const [quotes, setQuotes] = useState<object[]>(Array(10).fill({ content: "", author: "" }));
   const [posts, setPosts] = useState<Article[]>([]);
+
   // const fav = ["", "", "", "", "", ""];
   useEffect(() => {
     const fetchQuotes = async () => {
@@ -50,8 +51,21 @@ export default function Home({ params }: Props) {
       setPosts(response);
     }
 
+    const toggleMontlyPayment = () => {
+      const priceElement = document.getElementById("PriceDisplay");
+      const timespanElement = document.getElementById("TimeSpanDisplay");
+      if (document.getElementById('MonthlyToggle')?.checked) {
+        priceElement!.innerHTML = "40.000 VNĐ"
+        timespanElement!.innerHTML = "/tháng";
+      } else {
+        priceElement!.innerHTML = "2.000 VNĐ"
+        timespanElement!.innerHTML = "/ngày";
+      }
+    }
+
     fetchQuotes();
     fetchPosts();
+    document.getElementById("MonthlyToggle")!.onchange = toggleMontlyPayment;
   }, []);
 
   return (
@@ -83,7 +97,7 @@ export default function Home({ params }: Props) {
       <hr className="border-t-2 border-gray-800" />
       <section className="p-4 pt-24 pb-24 bg-white">
         <div className="relative">
-          <h2 className="mb-4 text-3xl">Một số loại sách yêu thích</h2>
+          <h2 className="mb-4 text-3xl">Các bài tóm tắt nổi bật</h2>
           <button className="absolute bottom-0 font-semibold underline right-4 underline-offset-2">Xem thêm</button>
         </div>
         <HorizontalScrollable className="flex overflow-x-hidden gap-x-8 cursor-grab active:cursor-grabbing" defaultScrollAmount={350}>
@@ -168,6 +182,144 @@ export default function Home({ params }: Props) {
           )}
         </HorizontalScrollable>
       </section >
+      <hr className="h-px border-t-2 border-gray-800" />
+      <div className="flex gap-12 px-4 py-8 mx-auto sm:px-6 sm:py-12 lg:px-8">
+        <div className="flex-1">
+          <h2 className="text-3xl font-bold leading-relaxed tracking-wider text-gray-900">
+            Khai phá tri thức,<br /> tối ưu thời gian
+          </h2>
+          <h3 className="font-semibold text-gray-700 leading-[30px] tracking-wide">
+            <span className="leading-[36px] text-lg tracking-wider">Nâng tầm trải nghiệm đọc với gói Premium!</span>
+            <span className="block mt-4 font-sans">
+              Truy cập kho tàng tóm tắt sách không giới hạn, tạo ghi chú cá nhân, và lưu trữ ý tưởng của riêng bạn. Đừng bỏ lỡ cơ hội khai phá kiến thức với những tính năng độc quyền chỉ dành riêng cho hội viên Premium.
+            </span>
+          </h3>
+        </div>
+        <div className="flex-[4_4_0] grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-center md:gap-8">
+          <div className="p-6 border border-gray-200 shadow-sm rounded-2xl sm:px-8 lg:p-12">
+            <div className="text-center">
+              <h2 className="text-lg font-medium text-gray-900">
+                Thông thường
+                <span className="sr-only">Gói</span>
+              </h2>
+
+              <p className="mt-2 sm:mt-4">
+                <strong className="text-3xl font-bold text-gray-900 sm:text-4xl"> Miễn phí </strong>
+
+                {/* <span className="text-sm font-medium text-gray-700">/month</span> */}
+              </p>
+            </div>
+
+            <ul className="mt-6 space-y-2">
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> 5 bài đọc / ngày </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Gợi ý nội dung phù hợp nhất với người dùng </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Khám phá nội dung mới mẻ, được đề xuất </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Thư viện giúp dễ dàng tìm lại được các ý tưởng đã đọc </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Cộng đồng người đọc </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Gợi ý nội dung bằng AI </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Tạo bài tóm tắt mới dễ dàng với Moodbook Studio </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> FAQ và trung tâm trợ giúp người dùng </span>
+              </li>
+            </ul>
+
+            {/* <a
+              href="#"
+              className="block px-12 py-3 mt-8 text-sm font-medium text-center text-indigo-600 bg-white border border-indigo-600 rounded-full hover:ring-1 hover:ring-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+            >
+              Get Started
+            </a> */}
+          </div>
+
+          <div
+            className="p-6 border border-indigo-600 shadow-sm rounded-2xl ring-1 ring-indigo-600 sm:px-8 lg:p-12"
+          >
+            <div className="flex items-center justify-center gap-2">
+              <span>Theo ngày</span>
+              <label
+                htmlFor="MonthlyToggle"
+                className="relative inline-block h-8 w-14 cursor-pointer rounded-full bg-gray-300 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-indigo-500"
+              >
+                <input type="checkbox" id="MonthlyToggle" className="sr-only peer" defaultChecked={true} />
+
+                <span
+                  className="absolute inset-y-0 m-1 transition-all bg-white rounded-full start-0 size-6 peer-checked:start-6"
+                ></span>
+              </label>
+              <span className="relative">Theo tháng <span className="absolute text-green-700">(-33%)</span></span>
+            </div>
+            <div className="text-center">
+              <h2 className="text-lg font-medium text-gray-900">
+                Premium
+                <span className="sr-only">Gói</span>
+              </h2>
+              <p className="mt-2 sm:mt-4">
+                <strong id="PriceDisplay" className="text-3xl font-bold text-gray-900 sm:text-4xl"> 40.000 VNĐ </strong>
+
+                <span id="TimeSpanDisplay" className="text-sm font-medium text-gray-700">/tháng</span>
+              </p>
+            </div>
+
+            <ul className="mt-6 space-y-2">
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Không giới hạn số bài đọc / ngày </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Lưu trữ các thẻ ý tưởng thành nhóm với Stash </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Ghi chú mọi lúc mọi nơi </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Lướt nội dung không quảng cáo </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Nghe bài tóm tắt thay vì đọc với công nghệ TTS </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <SquareCheck className="text-indigo-700" />
+                <span className="text-gray-700"> Hỗ trợ trực tuyến với người sáng tạo nội dung </span>
+              </li>
+            </ul>
+
+            <a
+              href="#"
+              className="block px-12 py-3 mt-8 text-sm font-medium text-center text-white bg-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-700 hover:ring-1 hover:ring-indigo-700 focus:outline-none focus:ring active:text-indigo-500"
+            >
+              Get Started
+            </a>
+          </div>
+
+
+        </div>
+      </div>
       <hr className="h-px border-t-2 border-gray-800" />
       <Footer />
     </>

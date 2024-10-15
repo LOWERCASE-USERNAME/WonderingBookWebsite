@@ -16,6 +16,15 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      sans: ["Inter", "Arial"],
+      serif: [
+        "Palatino Linotype",
+        "Palatino LT STD",
+        "Book Antiqua",
+        "Times New Roman",
+      ],
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",

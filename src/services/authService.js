@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "https://localhost:7213/api/User";
+const API_URL = "/User";
 
 export const register = async (userData) => {
   const res = await axios.post(`${API_URL}/register`, userData);
@@ -12,12 +12,15 @@ export const login = async (loginData) => {
   const res = await axios.post(`${API_URL}/login`, loginData);
   if (res.data.token) {
     localStorage.setItem("user-token", JSON.stringify(res.data.token));
+
+    axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
   }
   return res.data;
 };
 
 export const logout = () => {
   localStorage.removeItem("user-token");
+  delete axios.defaults.headers.common["Authorization"];
 };
 
 export const getCurrentUser = () => {
