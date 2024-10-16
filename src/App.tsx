@@ -26,8 +26,8 @@ import PremiumOffer from "./pages/premium-offer.page.tsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} errorElement={<ErrorBoundary />} />
+      <Route path="/register" element={<Register />} errorElement={<ErrorBoundary />} />
       {/* <Route path="/admin" element={<Admin />} />*/}
       <Route path="/home" element={<Home params={{ id: "FirstIdea" }} />} errorElement={<ErrorBoundary />} />
       <Route path="/explore" element={<Explore />} errorElement={<ErrorBoundary />} />

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { register } from "../../services/authService";
+import toast from "react-hot-toast";
 
 export function Register() {
   const [userData, setUserData] = useState({
@@ -16,10 +17,15 @@ export function Register() {
 
     try {
       await register(userData);
-      alert('Registration sucessful. Redirect to login.');
-      navigate('/login');
+
+      toast.success("Đăng ký thành công! Điều hướng tới trang đăng nhập");
+      setTimeout(_ => navigate("/login"), 3000);
     } catch (err) {
-      alert('Registration failed');
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error('Lỗi chưa dự kiến đã xảy ra', { duration: 10000 });
+      }
     }
   }
   return (
