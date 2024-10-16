@@ -5,7 +5,7 @@ import { cn } from "../../../lib/utils";
 interface DropdownMenuProps extends CommonComponentProps {
   buttonIcon?: React.ReactNode;
   buttonLabel?: string; // The label for the dropdown button
-  options: { label: string; action: (event: React.MouseEvent) => void; icon: React.ReactNode }[]; // Array of options with label and action
+  options: { label: string; action?: (event: React.MouseEvent) => void; icon?: React.ReactNode, className?: string }[]; // Array of options with label and action
   direction?: "up" | "down" | "left" | "right"
 }
 
@@ -61,29 +61,32 @@ export default function DropdownMenu({
 
       {isOpen && (
         <div
-          className={cn(`absolute right-0 z-10 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 ${direction === "down" && "mt-2 top-full"} ${direction === "up" && "mb-2 -top-full"}`, className)}
+          className={cn(`absolute right-0 z-10 w-fit bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 ${direction === "down" && "mt-2 top-full"} ${direction === "up" && "mb-2 -top-full"}`, className)}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          <div className="py-1" role="none">
+          <div className="px-2 py-1" role="none">
             {options.map((option, index) => (
-              <button
-                key={index}
-                onClick={(event) => {
-                  option.action(event); // Execute the passed action
-                  setIsOpen(false); // Close the dropdown after action
-                }}
-                className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                role="menuitem"
-                tabIndex={-1}
-              >
-                <div className="flex justify-around">
-                  <span>{option.icon}</span>
-                  <span className="">{option.label}</span>
-                </div>
-              </button>
+              option.action ?
+                <button
+                  key={index}
+                  onClick={(event) => {
+                    option.action?.(event); // Execute the passed action
+                    setIsOpen(false); // Close the dropdown after action
+                  }}
+                  className={cn("block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900", option.className)}
+                  role="menuitem"
+                  tabIndex={-1}
+                >
+                  <div className="flex items-center gap-6">
+                    <span>{option.icon}</span>
+                    <span className="">{option.label}</span>
+                  </div>
+                </button>
+                :
+                <span className={cn("block p-2 mt-2 text-xs font-medium tracking-wide text-gray-500 uppercase border-t border-gray-300 first:border-t-0 first:mt-0", option.className)} > {option.label}</span>
             ))}
           </div>
         </div>

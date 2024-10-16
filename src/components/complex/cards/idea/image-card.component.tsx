@@ -9,14 +9,17 @@ import { Image } from "../../../../types/Image";
 import { IdeaCard } from "../../../../types/ideaCard";
 
 interface ImageCardProps extends CommonComponentProps {
+  id?: string;
   data: IdeaCard;
   isReadOnly?: boolean;
   onDelete?: () => void;
   onUpdate?: (updatedData: Partial<IdeaCard>) => void;
 }
 
-export function ImageCard({ className, data, isReadOnly = true, onDelete, onUpdate }: ImageCardProps) {
+export function ImageCard({ className, data, isReadOnly = true, onDelete, onUpdate, id }: ImageCardProps) {
   // const [cardImage, setCardImage] = useState<Image | null>(null);
+  const readCounter = 0;
+  const saveCounter = 0;
 
   const editableContent = !isReadOnly && (
     <>
@@ -44,7 +47,7 @@ export function ImageCard({ className, data, isReadOnly = true, onDelete, onUpda
   )
 
   return (
-    <EmptyCard className={cn("w-[544px] border-2 border-black", className)}>
+    <EmptyCard id={id} className={cn("w-[544px] border-2 border-black", className)}>
       {editableContent || readonlyContent}
     </EmptyCard >
   );

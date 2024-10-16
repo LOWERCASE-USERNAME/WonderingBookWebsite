@@ -12,39 +12,37 @@ import { RoundedImage } from "../../components/basic/rounded-image.component";
 import { GlowingButton } from "../../components/basic/button";
 import { SideWidget } from "../../components/complex/widgets/side-widget";
 import { getArticle, putArticle } from "../../services/articleService";
-import { postIdeaCardBulk, putIdeaCardBulk } from "../../services/ideaCardService";
+import { deleteIdeaCard, postIdeaCardBulk, putIdeaCardBulk } from "../../services/ideaCardService";
 import { Article } from "../../types/article";
 import { IdeaCard } from "../../types/ideaCard";
 import { IdeaCardType } from "../../types/ideaCardType";
+import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
+import { cn } from "../../lib/utils";
+import CustomLoader from "../../components/basic/loader";
 
-interface Props {
-  params: {
-    id: string;
-  };
-}
-
-const widgetOptions = [
-  { id: 'undo', name: 'path', icon: <RotateCcw />, handleClick: () => { } },
-  { id: 'moveup', name: 'path', icon: <ChevronsUp />, handleClick: () => { } },
-  { id: 'movedown', name: 'path', icon: <ChevronsDown />, handleClick: () => { } },
-  { id: 'help', name: 'path', icon: <HelpCircle />, handleClick: () => { } },
-  { id: 'delete', name: 'path', icon: <Trash2 />, handleClick: () => { } },
-];
-
-export default function NewPost({ params }: Props) {
-  const { id } = params;
+export default function NewPost() {
   const navigate = useNavigate();
   const location = useLocation();
   const initData: Article = location.state || {};
   const [postData, setPostData] = useState<Article>(initData);
-  const [userInfo, setUserInfo] = useState<object | null>(null);
+  const { userInfo, setUserInfo } = useFetchUserInfo();
   const [draftCards, setDraftCards] = useState<IdeaCard[]>([]);
+  const [loading, setLoading] = useState(true);
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const getWidgetOptions = (id: string) => [
+    { id: `undo-#${id}`, name: `card-widget-#${id}`, icon: <RotateCcw />, handleClick: (e: React.MouseEvent) => handleResetCard(e, id) },
+    { id: `moveup-#${id}`, name: `card-widget-#${id}`, icon: <ChevronsUp />, handleClick: (e: React.MouseEvent) => handleMoveCard(e, id, "up") },
+    { id: `movedown-#${id}`, name: `card-widget-#${id}`, icon: <ChevronsDown />, handleClick: (e: React.MouseEvent) => handleMoveCard(e, id, "down") },
+    { id: `help-#${id}`, name: `card-widget-#${id}`, icon: <HelpCircle />, handleClick: () => handleDisplayHelp("text") },
+    { id: `delete-#${id}`, name: `card-widget-#${id}`, icon: <Trash2 />, handleClick: () => handleDeleteCard(id) },
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       const response: Article = await getArticle(postData.articleId);
       setPostData(response);
-      setDraftCards(response.ideaCards?.sort((a, b) => Number(a.order) - Number(b.order)) ?? []);
+      setDraftCards(sortCards(response.ideaCards ?? []));
+      await setTimeout(() => setLoading(false), 1500);
     }
     fetchData();
   }, []);
@@ -54,6 +52,7 @@ export default function NewPost({ params }: Props) {
       const createFormData = new FormData();
       const updateFormData = new FormData();
 
+      // Mental note: Fix these to seperate between Id anot not between images
       const createPromise = draftCards.filter(c => c.image == null || c.image.startsWith("blob:")).map(async (c, idx) => {
         const order = draftCards.indexOf(c);
         appendCardData(createFormData, c, idx, order);
@@ -73,15 +72,25 @@ export default function NewPost({ params }: Props) {
 
       await Promise.all([Promise.all(createPromise), Promise.all(updatePromise)]);
 
-      const [responseCreateIdeaCards, responseUpdateIdeaCards] = await Promise.all([
+      const [responseCreateIdeaCards, responseUpdateIdeaCards, responseArticle] = await Promise.all([
         !createFormData.entries().next().done && postIdeaCardBulk(createFormData),
-        !updateFormData.entries().next().done && putIdeaCardBulk(updateFormData)
+        !updateFormData.entries().next().done && putIdeaCardBulk(updateFormData),
+        (async () => {
+          const articleFormData = new FormData();
+          articleFormData.append("articleId", postData.articleId);
+          articleFormData.append("title", postData.title);
+          articleFormData.append("curatorNote", postData.curatorNote.length != 0 ? postData.curatorNote : "None");
+          articleFormData.append("miscAuthor", String(postData.miscAuthor));
+
+          if (postData.image) {
+            const response = await fetch(postData.image);
+            const blob = await response.blob();
+            articleFormData.append("image", blob);
+          }
+          putArticle(articleFormData)
+        })(),
       ]);
 
-      console.log(responseCreateIdeaCards);
-      console.log(responseUpdateIdeaCards);
-
-      // console.log(response);
       // if (response != null) {
       //   navigate("/write", { state: {} });
       // }
@@ -93,13 +102,13 @@ export default function NewPost({ params }: Props) {
   const appendCardData = (formData: FormData, card: any, idx: number, order: number) => {
     formData.append(`ideaCards[${idx}].ideaCardId`, card.ideaCardId);
     formData.append(`ideaCards[${idx}].articleId`, card.articleId);
-    formData.append(`ideaCards[${idx}].title`, card.title);
-    formData.append(`ideaCards[${idx}].content`, card.content);
+    formData.append(`ideaCards[${idx}].title`, String(card.title.length != 0 ? card.title : null));
+    formData.append(`ideaCards[${idx}].content`, String(card.content.length != 0 ? card.content : null));
     formData.append(`ideaCards[${idx}].order`, order.toString());
     formData.append(`ideaCards[${idx}].cardType`, card.cardType != null ? card.cardType.toString() : "");
   };
 
-  const handleUpdatePost = (id: string, updatedPostData: Partial<Article>) => {
+  const handleUpdatePost = (updatedPostData: Partial<Article>) => {
     setPostData(prevPostData => ({
       ...prevPostData,
       ...updatedPostData
@@ -119,24 +128,66 @@ export default function NewPost({ params }: Props) {
   }
 
   const handleDeleteCard = (id: string) => {
-    setDraftCards(draftCards.filter(card => card.articleId !== id));
+    deleteIdeaCard(id)
+      .then(() => setDraftCards(draftCards.filter(card => card.ideaCardId !== id)));
+    // setDraftCards(draftCards.filter(card => card.articleId !== id));s
   };
 
   const handleUpdateCard = (id: string, updatedCardData: Partial<IdeaCard>) => {
-    console.log(draftCards);
     setDraftCards((prevCards) =>
       prevCards.map((card) => (card.ideaCardId === id ? { ...card, ...updatedCardData } : card))
     );
   };
 
-  const handleMoveCard = (id: string, direction: "up" | "down") => {
-    setDraftCards((prevCards) =>
-      prevCards.map((card) => (card.ideaCardId === id ? { ...card, ...updatedCardData } : card))
-    );
+  const handleMoveCard = (e: React.MouseEvent, id: string, direction: "up" | "down") => {
+    e.target.checked = false;
+    let prevCardIndex, nextCardIndex;
+
+    let curCardIndex = draftCards.findIndex(card => card.ideaCardId === id);
+    if (curCardIndex === -1) return;
+
+    const newDraftCards = [...draftCards];
+    switch (direction) {
+      case 'up':
+        prevCardIndex = curCardIndex - 1;
+        if (prevCardIndex >= 0) {
+          const prevCard = newDraftCards[prevCardIndex];
+          const curCard = newDraftCards[curCardIndex];
+
+          [curCard.order, prevCard.order] = [prevCard.order, curCard.order];
+        }
+        break;
+      case 'down':
+        nextCardIndex = curCardIndex + 1;
+        if (nextCardIndex < newDraftCards.length) {
+          const nextCard = newDraftCards[nextCardIndex];
+          const curCard = newDraftCards[curCardIndex];
+
+          [curCard.order, nextCard.order] = [nextCard.order, curCard.order];
+        }
+        break;
+      default:
+        break;
+    }
+
+    const result = sortCards(newDraftCards);
+
+    setDraftCards(result);
+    curCardIndex = result.findIndex(card => card.ideaCardId === id);
+    const cardElement = document.getElementById(`card-${curCardIndex}`);
+    if (cardElement) {
+      console.log(cardElement);
+      cardElement.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
-  const handleResetCard = (id: string) => {
-
+  const handleResetCard = (e: React.MouseEvent, id: string) => {
+    e.target.checked = false;
+    handleUpdateCard(id, {
+      content: "",
+      image: "",
+      title: ""
+    });
   }
 
   const handleDisplayHelp = (cardType: "text" | "image" | "quote") => {
@@ -153,21 +204,21 @@ export default function NewPost({ params }: Props) {
     switch (card.cardType) {
       case IdeaCardType.Text:
         return (
-          <TextCard data={card} isReadOnly={false} key={index}
+          <TextCard data={card} isReadOnly={false} id={"card-" + index}
             onDelete={() => handleDeleteCard(card.ideaCardId)}
             onUpdate={(updatedData: Partial<IdeaCard>) => handleUpdateCard(card.ideaCardId, updatedData)}
           />
         );
       case IdeaCardType.Image:
         return (
-          <ImageCard data={card} isReadOnly={false} key={index}
+          <ImageCard data={card} isReadOnly={false} id={"card-" + index}
             onDelete={() => handleDeleteCard(card.ideaCardId)}
             onUpdate={(updatedData: Partial<IdeaCard>) => handleUpdateCard(card.ideaCardId, updatedData)}
           />
         );
       case IdeaCardType.Quote:
         return (
-          <QuoteCard data={card} isReadOnly={false} key={index}
+          <QuoteCard data={card} isReadOnly={false} id={"card-" + index}
             onDelete={() => handleDeleteCard(card.ideaCardId)}
             onUpdate={(updatedData: Partial<IdeaCard>) => handleUpdateCard(card.ideaCardId, updatedData)}
           />
@@ -183,7 +234,11 @@ export default function NewPost({ params }: Props) {
       textarea.style.height = 'auto'; // Reset height to auto to recalculate
       textarea.style.height = `${textarea.scrollHeight}px`; // Set height based on content
     }
-    handleUpdatePost(id ?? postData.articleId, { title: event.target.value })
+    handleUpdatePost({ title: event.target.value })
+  }
+
+  const sortCards = (cards: IdeaCard[]) => {
+    return cards.length > 0 ? cards.sort((a, b) => Number(a.order) - Number(b.order)) : [];
   }
 
   return (
@@ -197,7 +252,7 @@ export default function NewPost({ params }: Props) {
             className="mx-8 rounded-xl"
             src={postData.image ?? ""}
             isReadOnly={false}
-            onUpdate={(updatedData: Partial<Article>) => handleUpdatePost(id ?? postData.articleId, updatedData)}
+            onUpdate={(updatedData: Partial<Article>) => handleUpdatePost(updatedData)}
           />
         </EmptyCard>
         <div className="flex-[2_1_auto]">
@@ -207,7 +262,8 @@ export default function NewPost({ params }: Props) {
             placeholder="Tiêu đề" spellCheck={false} ref={titleRef} rows={1} />
           <h2 className="mt-4 italic">
             By <input className="px-1 text-lg italic font-bold outline-none"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => handleUpdatePost(id ?? postData.articleId, { miscAuthor: e.target.value })}
+              value={String(postData.miscAuthor)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleUpdatePost({ miscAuthor: e.target.value })}
               placeholder="Tác giả" spellCheck={false} />
           </h2>
           {/* : <h2 className="mt-4 italic">By <span className="text-lg font-bold">{postData.author}</span></h2>} */}
@@ -221,12 +277,17 @@ export default function NewPost({ params }: Props) {
       </section >
       <div className="grid grid-cols-5">
         <section className="w-full col-span-3">
-          <div className="flex flex-col items-start justify-center gap-8 ml-16 h-fit">
+          {loading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center top-24">
+              <CustomLoader />
+            </div>
+          )}
+          <div className={cn("flex flex-col items-start justify-center gap-8 ml-16 h-fit transition-opacity duration-500", loading ? 'opacity-0' : 'opacity-100')}>
             {draftCards.map((draftCard: IdeaCard, idx) => {
               return (
-                <div className="flex gap-4">
+                <div className="flex gap-4 select-none" key={idx}>
                   {handleRenderCard(draftCard, idx)}
-                  <SideWidget options={widgetOptions} />
+                  <SideWidget options={getWidgetOptions(draftCard.ideaCardId)} type="checkbox" />
                 </div>
               );
             })}

@@ -10,15 +10,18 @@ import { Image } from "../../../../types/Image";
 import { IdeaCard } from "../../../../types/ideaCard";
 
 interface QuoteCardProps extends CommonComponentProps {
+  id?: string;
   data: IdeaCard;
   isReadOnly?: boolean;
   onDelete?: () => void;
   onUpdate?: (updatedData: Partial<IdeaCard>) => void;
 }
 
-export function QuoteCard({ className, data, isReadOnly = true, onUpdate, onDelete }: QuoteCardProps) {
+export function QuoteCard({ className, data, isReadOnly = true, onUpdate, onDelete, id }: QuoteCardProps) {
   // const [cardImage, setCardImage] = useState<Image | null>(null);
   const [textCount, setTextCount] = useState<number>(data.content?.length ?? 0);
+  const readCounter = 0;
+  const saveCounter = 0;
 
   const editableContent = !isReadOnly && (
     <>
@@ -43,7 +46,7 @@ export function QuoteCard({ className, data, isReadOnly = true, onUpdate, onDele
   )
 
   return (
-    <EmptyCard className={cn("w-[544px] border-2 border-black", className)}>
+    <EmptyCard id={id} className={cn("w-[544px] border-2 border-black", className)}>
       {editableContent || readonlyContent}
     </EmptyCard>
   );

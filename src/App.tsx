@@ -18,6 +18,10 @@ import { Register } from "./pages/auth/register.page.tsx";
 import NewPost from "./pages/studio/new-post.page.tsx";
 import Studio from "./pages/studio/studio.post.tsx";
 import { ComingSoon } from "./routes/errors/comingSoon.tsx";
+import Explore from "./pages/explore.page.tsx";
+import AboutUs from "./pages/about-us.page.tsx";
+import Profile from "./pages/profile.page.tsx";
+import PremiumOffer from "./pages/premium-offer.page.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,22 +30,15 @@ const router = createBrowserRouter(
       <Route path="/register" element={<Register />} />
       {/* <Route path="/admin" element={<Admin />} />*/}
       <Route path="/home" element={<Home params={{ id: "FirstIdea" }} />} errorElement={<ErrorBoundary />} />
-      <Route path="/explore" element={<ComingSoon />} errorElement={<ErrorBoundary />} />
-      <Route path="/aboutus" element={<ComingSoon />} errorElement={<ErrorBoundary />} />
+      <Route path="/explore" element={<Explore />} errorElement={<ErrorBoundary />} />
+      <Route path="/aboutus" element={<AboutUs />} errorElement={<ErrorBoundary />} />
+      <Route path="/profile" element={<Profile />} errorElement={<ErrorBoundary />} />
+      <Route path="/profile/premium" element={<PremiumOffer />} errorElement={<ErrorBoundary />} />
       <Route
-        path="/card"
-        element={
-          <>
-            <BookCard />
-          </>
-        }
-        errorElement={<ErrorBoundary />}
-      />
-      <Route
-        path="/write"
+        path="/write/:id"
         element={
           <ProtectedRoute>
-            <NewPost params={{ id: "FirstIdea" }} />
+            <NewPost />
           </ProtectedRoute>
         }
         errorElement={<ErrorBoundary />}
@@ -50,15 +47,15 @@ const router = createBrowserRouter(
         path="/studio"
         element={
           <ProtectedRoute>
-            <Studio params={{ id: "FirstIdea" }} />
+            <Studio />
           </ProtectedRoute>
         }
         errorElement={<ErrorBoundary />}
       />
       <Route
-        path="/detail"
+        path="/detail/:id"
         element={
-          <PostDetail params={{ id: "FirstIdea" }} />
+          <PostDetail />
         }
         errorElement={<ErrorBoundary />}
       />
