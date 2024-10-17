@@ -1,7 +1,6 @@
 import axios from "axios";
 import { getCurrentUser } from "./authService";
 
-//const API_URL = "https://localhost:7213/api/IdeaCard";
 const API_URL = "/IdeaCard";
 // const DEFAULT_HEADER = {
 //   Authorization: `Bearer ${getCurrentUser()}`, // Pass the token in headers

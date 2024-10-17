@@ -12,6 +12,8 @@ import { Article } from "../../types/article";
 import { Modal } from "../../components/basic/modal.component";
 import { GoogleBooksAutocomplete } from "../../components/complex/inputs/google-book-autocomplete.component";
 import { GoogleBook } from "../../types/googleBook";
+import toast from "react-hot-toast";
+import useCustomToast from "../../hooks/useCustomToast";
 
 const sources = [
   {
@@ -38,6 +40,7 @@ export default function Studio() {
   const [bookSourceModalOpen, setBookSourceModalOpen] = useState(false);
   // const [bookSource, setBookSource] = useState<object | null>(null);
   const [selectedBook, setSelectedBook] = useState<GoogleBook | null>(null);
+  const { getToaster } = useCustomToast();
 
 
   useEffect(() => {
@@ -60,8 +63,6 @@ export default function Studio() {
         setBookSourceModalOpen(true);
         return;
       } else {
-        // TODO: add Book by API if come from Book Source
-        //TODO: add image, postArticle at BE is receiving Blob, while Google Book API return image URL
         formData.append("title", selectedBook.title);
         formData.append("miscAuthor", selectedBook.authors);
         formData.append("defaultImage", selectedBook.imageLink);
@@ -78,7 +79,11 @@ export default function Studio() {
         navigate(`/write/${response.articleId}`, { state: response });
       }
     } catch (error) {
-      console.error("Failed to create post", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Lỗi chưa dự kiến đã xảy ra', { duration: 10000 });
+      }
     }
   }
 
@@ -96,6 +101,7 @@ export default function Studio() {
 
   return (
     <div className="container flex flex-col gap-6">
+      {getToaster()}
       <nav className="h-12">
         <Navigation userInfo={userInfo} setUserInfo={setUserInfo} />
       </nav>

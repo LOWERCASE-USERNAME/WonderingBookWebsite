@@ -19,6 +19,8 @@ import { IdeaCardType } from "../../types/ideaCardType";
 import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
 import { cn } from "../../lib/utils";
 import CustomLoader from "../../components/basic/loader";
+import toast from "react-hot-toast";
+import useCustomToast from "../../hooks/useCustomToast";
 
 export default function NewPost() {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ export default function NewPost() {
   const [draftCards, setDraftCards] = useState<IdeaCard[]>([]);
   const [loading, setLoading] = useState(true);
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const { getToaster } = useCustomToast();
   const getWidgetOptions = (id: string) => [
     { id: `undo-#${id}`, name: `card-widget-#${id}`, icon: <RotateCcw />, handleClick: (e: React.MouseEvent) => handleResetCard(e, id) },
     { id: `moveup-#${id}`, name: `card-widget-#${id}`, icon: <ChevronsUp />, handleClick: (e: React.MouseEvent) => handleMoveCard(e, id, "up") },
@@ -129,7 +132,9 @@ export default function NewPost() {
 
   const handleDeleteCard = (id: string) => {
     deleteIdeaCard(id)
-      .then(() => setDraftCards(draftCards.filter(card => card.ideaCardId !== id)));
+      .then(() => setDraftCards(draftCards.filter(card => card.ideaCardId !== id)))
+      .then(() => toast.success("Đã xóa thẻ"))
+      .catch((err) => toast.error(err));
     // setDraftCards(draftCards.filter(card => card.articleId !== id));s
   };
 
@@ -243,6 +248,7 @@ export default function NewPost() {
 
   return (
     <div className="container flex flex-col gap-6">
+      {getToaster()}
       <nav className="h-12">
         <Navigation userInfo={userInfo} setUserInfo={setUserInfo} />
       </nav>
