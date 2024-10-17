@@ -56,14 +56,11 @@ export const getUserIdFromToken = () => {
 };
 
 export const getUserInfo = async (userId) => {
-  const response = await axios.get(
-    `https://localhost:7213/api/User/home/${userId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${getCurrentUser()}`, // Pass the token in headers
-      },
+  const response = await axios.get(`/User/home/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${getCurrentUser()}`, // Pass the token in headers
     },
-  );
+  });
 
   return response.data.userInfo;
 };
