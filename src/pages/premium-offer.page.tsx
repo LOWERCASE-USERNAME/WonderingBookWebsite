@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 export default function PremiumOffer() {
   const { userInfo, setUserInfo } = useFetchUserInfo();
   const [amount, setAmount] = useState<number>(40000);
-  const [transactionUrl, setTransactionUrl] = useState<string>("https://img.vietqr.io/image/970422-2709200383333-compact2.png?amount=40000&addInfo=INVBYQ20241015154423&accountName=MOODBOOK");
+  const [transactionUrl, setTransactionUrl] = useState<string>();
   useEffect(() => {
     const fetchTransactionInfo = async () => {
       const formData = new FormData();
@@ -18,7 +18,7 @@ export default function PremiumOffer() {
       const response = await axios.postForm(`/FinacialTransaction`, formData);
       setTransactionUrl(response.data);
     }
-    // fetchTransactionInfo();
+     fetchTransactionInfo();
   }, [userInfo, amount]);
 
   console.log(userInfo)
