@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Cookies from "js-cookie";
-import { getUserIdFromToken, getUserInfo } from '../services/authService';
+import { getCurrentUser, getUserIdFromToken, getUserInfo } from '../services/authService';
 
 export const useFetchUserInfo = () => {
   const [userInfo, setUserInfo] = useState<object | null>(null);

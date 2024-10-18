@@ -1,5 +1,6 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { Cookie } from "lucide-react";
 
 const API_URL = "/User";
 
@@ -19,7 +20,8 @@ export const login = async (loginData) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("user-token");
+  localStorage.removeItem("user-token"); //JWT token stored in localStorage
+  Cookie.remove("userInfo"); //actual user info stored in cookie
   delete axios.defaults.headers.common["Authorization"];
 };
 
