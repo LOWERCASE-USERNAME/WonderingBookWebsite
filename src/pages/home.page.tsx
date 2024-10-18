@@ -76,7 +76,7 @@ export default function Home() {
           </p>
           <button className="px-12 py-2 font-sans text-lg font-semibold tracking-widest text-white rounded-full bg-rose-300 w-fit">Xem ngay!</button>
         </div>
-        <div className="h-full p-4 bg-gray-300 bg-[url('dip-devices.jpg')] bg-cover" >
+        <div className="h-full p-4 bg-gray-300 bg-[url('/dip-devices.jpg')] bg-cover" >
         </div>
       </section >
       {/* Welcome text */}
