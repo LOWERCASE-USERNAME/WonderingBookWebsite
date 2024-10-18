@@ -10,20 +10,13 @@ import { Article } from "../types/article";
 import { getArticles } from "../services/articleService";
 import { Link } from "react-router-dom";
 import { dateFormat } from "../lib/utils";
+import ChatbotComponent from "../components/complex/cards/chatbot/chatbot";
 
-interface Props {
-  params: {
-    id: string;
-  };
-}
-
-export default function Home({ params }: Props) {
-  const { id } = params;
+export default function Home() {
   const { userInfo, setUserInfo } = useFetchUserInfo();
   const [quotes, setQuotes] = useState<object[]>(Array(10).fill({ content: "", author: "" }));
   const [posts, setPosts] = useState<Article[]>([]);
 
-  // const fav = ["", "", "", "", "", ""];
   useEffect(() => {
     const fetchQuotes = async () => {
       const zenquotes_url = "https://cors-anywhere.herokuapp.com/https://zenquotes.io/api/quotes/";
@@ -71,13 +64,15 @@ export default function Home({ params }: Props) {
   return (
     <>
       <Navigation userInfo={userInfo} setUserInfo={setUserInfo} />
-      {/* Banner */}
+      <div className="fixed bottom-0 right-0 z-[9999] w-96">
+        <ChatbotComponent />
+      </div>
       <section className="h-96 bg-[#f9f4ef] grid grid-cols-2 divide-x-2 divide-gray-800 border-y-2 border-y-gray-800">
         <div className="flex flex-col content-start justify-center gap-4 p-4 mx-auto whitespace-pre-line">
           <p className="text-5xl tracking-wide select-none">
             Đọc không giới hạn. <br /> <hr className="invisible h-4" />
             Thử ngay với các gói <span className="italic">Premium</span> ưu đãi!<br />
-            <small className="text-lg tracking-normal">Chỉ từ 200k, bạn sẽ sở hữu hàng ngàn ưu đãi đi kèm</small>
+            <small className="text-lg tracking-normal">Chỉ từ 40k, bạn sẽ sở hữu hàng ngàn ưu đãi đi kèm</small>
           </p>
           <button className="px-12 py-2 font-sans text-lg font-semibold tracking-widest text-white rounded-full bg-rose-300 w-fit">Xem ngay!</button>
         </div>

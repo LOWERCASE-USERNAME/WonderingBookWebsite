@@ -65,3 +65,11 @@ pre {
 .rich-text p {
   font-size: 16px;
 }
+
+.react-chatbot-kit-chat-container {
+  width: 100% !important;
+}
+.react-chatbot-kit-chat-bot-message {
+  width: fit-content !important;
+  margin-left: 10px !important;
+}
