@@ -26,13 +26,18 @@ class MessageParser {
 }
 
 // Main Chatbot component
-const ChatbotComponent = () => {
+const ChatbotComponent = ({ isOpenBot }) => {
   return (
-    <Chatbot
-      config={config}
-      messageParser={MessageParser}
-      actionProvider={ActionProvider}
-    />
+    <>
+      {isOpenBot && (
+        <Chatbot
+          config={config}
+          messageParser={MessageParser}
+          actionProvider={ActionProvider}
+          placeholderText="Nhắn lời nói của bạn vào đây"
+        />
+      )}
+    </>
   );
 };
 

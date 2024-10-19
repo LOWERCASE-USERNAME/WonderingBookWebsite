@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getCurrentUser } from "./authService";
 
 const API_URL = "/Articles";
 // const DEFAULT_HEADER = {
@@ -8,6 +7,11 @@ const API_URL = "/Articles";
 
 export const getArticles = async () => {
   const response = await axios.get(API_URL);
+  return response.data;
+};
+
+export const recommendArticles = async () => {
+  const response = await axios.get(`${API_URL}/recommend`);
   return response.data;
 };
 

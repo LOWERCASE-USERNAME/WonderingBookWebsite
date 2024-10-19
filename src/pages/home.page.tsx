@@ -1,6 +1,6 @@
 'use client'
 
-import { Flower, SquareCheck } from "lucide-react";
+import { CircleX, Flower, SquareCheck } from "lucide-react";
 import Navigation from "../components/navigations/navigation";
 import { HorizontalScrollable } from "../components/scrollable/horizontal-scrollable.component";
 import Footer from "../components/navigations/footer";
@@ -14,6 +14,7 @@ import ChatbotComponent from "../components/complex/cards/chatbot/chatbot";
 
 export default function Home() {
   const { userInfo, setUserInfo } = useFetchUserInfo();
+  const [isOpenBot, setIsOpenBot] = useState(false);
   const [quotes, setQuotes] = useState<object[]>(Array(10).fill({ content: "", author: "" }));
   const [posts, setPosts] = useState<Article[]>([]);
 
@@ -61,11 +62,33 @@ export default function Home() {
     document.getElementById("MonthlyToggle")!.onchange = toggleMontlyPayment;
   }, []);
 
+  const toggleBot = () => {
+    setIsOpenBot(prevState => !prevState);
+  }
+
   return (
     <>
       <Navigation userInfo={userInfo} setUserInfo={setUserInfo} />
-      <div className="fixed bottom-0 right-0 z-[9999] w-96">
-        <ChatbotComponent />
+      <div className="fixed bottom-0 right-0 z-[999] w-96">
+        <div className="relative">
+          {!isOpenBot ?
+            <div onClick={() => toggleBot()} className="m-6 w-16 h-16 bg-white rounded-full z-[1000] flex justify-center items-center shadow-lg cursor-pointer absolute right-0 bottom-0">
+              <img src="/moodbook_logo.png" className="w-10 h-8" />
+            </div>
+            :
+            <>
+              <div
+                onClick={() => toggleBot()}
+                className="absolute top-0 right-0 m-2 cursor-pointer z-[1000] "
+              >
+                <CircleX color="gray" className="" />
+              </div>
+              <ChatbotComponent isOpenBot={isOpenBot} />
+            </>
+          }
+        </div>
+
+        {/* <ChatbotComponent isOpenBot={isOpenBot} /> */}
       </div>
       <section className="h-96 bg-[#f9f4ef] grid grid-cols-2 divide-x-2 divide-gray-800 border-y-2 border-y-gray-800">
         <div className="flex flex-col content-start justify-center gap-4 p-4 mx-auto whitespace-pre-line">

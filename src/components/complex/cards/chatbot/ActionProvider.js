@@ -1,14 +1,20 @@
-import { getArticles } from "../../../../services/articleService";
-import ChatbotHelp from "./components/ChatbotHelp";
-import ChatbotMood from "./components/ChatbotMood";
-import ChatbotAfterChoices from "./components/ChatbotAfterChoices";
-import ChatbotAuthor from "./components/ChatbotAuthor";
+import { recommendArticles } from "../../../../services/articleService";
 
 export default class ActionProvider {
   constructor(createChatBotMessage, setStateFunc) {
     this.createChatBotMessage = createChatBotMessage;
     this.setState = setStateFunc;
   }
+
+  setLastRequest = (type, option) => {
+    const lastRequest = { type, option };
+    localStorage.setItem("moodbotLastRequest", JSON.stringify(lastRequest)); // Store in localStorage
+  };
+
+  getLastRequest = () => {
+    const lastRequest = localStorage.getItem("moodbotLastRequest");
+    return lastRequest ? JSON.parse(lastRequest) : null; // Parse from localStorage
+  };
 
   chooseTopic = () => {
     const message = this.createChatBotMessage(
@@ -40,22 +46,35 @@ export default class ActionProvider {
     this.addMessageToState(message);
   };
 
-  recommend = (chosenAspect) => {
-    let aspect = chosenAspect;
-    this.fetchBookHandler(aspect);
-    const message = this.createChatBotMessage("Mein Vorschlag für dich:");
-    this.addMessageToState(message);
-    const message2 = this.createChatBotMessage(
-      "Wie möchtest du fortfahren? Möchtest du das Buch kaufen? Du kannst mir auch sagen, was dir an der Empfehlung nicht gefällt. Oder du kannst die Suche beenden.",
-      {
-        widget: "choices",
-      },
+  endConv = () => {
+    const message = this.createChatBotMessage(
+      "Tôi rất vui lòng vì đã được giúp đỡ bạn",
     );
-    this.addMessageToState(message2);
+    this.addMessageToState(message);
+    localStorage.removeItem("moodbotLastRequest");
+  };
+
+  resetConv = () => {
+    const message = this.createChatBotMessage(
+      "Để tôi tạo lại một cuộc trò chuyện mới",
+    );
+    this.addMessageToState(message);
+    localStorage.removeItem("moodbotLastRequest");
+
+    setTimeout(
+      () =>
+        this.setState((prevState) => ({
+          ...prevState,
+          messages: prevState.messages.slice(0, 2),
+        })),
+      2000,
+    );
   };
 
   async fetchPosts(type, option) {
     try {
+      this.setLastRequest(type, option);
+
       switch (type) {
         case "author":
           break;
@@ -66,20 +85,27 @@ export default class ActionProvider {
         default:
           return;
       }
-      const response = await getArticles();
-      const posts = response.map((p) => p.title);
+      const response = await recommendArticles();
+      this.setState((prevState) => ({
+        ...prevState,
+        recommendedPosts: [...response],
+      }));
+      // const baseURL = "http://localhost:5173/";
+      // const posts = response.map(
+      //   (p) => `<a href="/detail/${p.articleId}">${p.title}</a>`,
+      // );
       const message = this.createChatBotMessage(
-        `Đây là các bài viết tôi gợi ý cho bạn: ${posts}`,
+        `Đây là các bài viết tôi gợi ý cho bạn: `,
+        {
+          widget: "linkList",
+        },
       );
       this.addMessageToState(message);
-      // this.setState((prev) => ({
-      //   ...prev,
-      //   messages: [...prev.messages, message],
-      // }));
       const message2 = this.createChatBotMessage(
         "Bạn muốn tiếp tục như thế nào?",
         {
           widget: "choices",
+          delay: 500,
         },
       );
       this.addMessageToState(message2);
@@ -98,14 +124,15 @@ export default class ActionProvider {
     }));
   };
 
-  // // Handle unknown moods
-  // handleUnknownMood() {
-  //   const message = this.createChatBotMessage(
-  //     "I didn't recognize that mood. Please try again.",
-  //   );
-  //   this.setState((prev) => ({
-  //     ...prev,
-  //     messages: [...prev.messages, message],
-  //   }));
-  // }
+  newRecommendation = () => {
+    const lastRequest = this.getLastRequest();
+    if (lastRequest) {
+      this.fetchPosts(lastRequest.type, lastRequest.option);
+    } else {
+      const message = this.createChatBotMessage(
+        "Xin lỗi, tôi không thể nhớ lại bạn đã muốn gì!",
+      );
+      this.addMessageToState(message);
+    }
+  };
 }

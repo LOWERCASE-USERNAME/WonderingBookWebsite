@@ -3,6 +3,8 @@ import ChatbotHelp from "./components/ChatbotHelp";
 import ChatbotMood from "./components/ChatbotMood";
 import ChatbotAfterChoices from "./components/ChatbotAfterChoices";
 import ChatbotAuthor from "./components/ChatbotAuthor";
+import ChatbotTopic from "./components/ChatbotTopic";
+import LinkList from "./components/LinkList";
 
 const config = {
   botName: "MoodBot",
@@ -26,6 +28,9 @@ const config = {
       delay: 0,
     }),
   ],
+  state: {
+    recommendedPosts: [],
+  },
   widgets: [
     {
       widgetName: "help",
@@ -37,7 +42,7 @@ const config = {
     },
     {
       widgetName: "topics",
-      widgetFunc: (props) => <ChatbotAuthor></ChatbotAuthor>,
+      widgetFunc: (props) => <ChatbotTopic {...props} />,
     },
     {
       widgetName: "moods",
@@ -46,6 +51,11 @@ const config = {
     {
       widgetName: "choices",
       widgetFunc: (props) => <ChatbotAfterChoices {...props} />,
+    },
+    {
+      widgetName: "linkList",
+      widgetFunc: (props) => <LinkList {...props} />,
+      mapStateToProps: ["recommendedPosts"],
     },
   ],
 };

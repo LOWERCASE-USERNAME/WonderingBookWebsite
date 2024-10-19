@@ -1,7 +1,7 @@
 import { ChatbotButton, ChatbotButtonContainer } from "./DefaultChatbotUI";
 
 export default function ChatbotAuthor(props) {
-  console.log(props);
+  // console.log(props);
   return (
     <ChatbotButtonContainer className="flex-col">
       <ChatbotButton

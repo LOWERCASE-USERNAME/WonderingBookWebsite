@@ -1,7 +1,7 @@
 import { ChatbotButton, ChatbotButtonContainer } from "./DefaultChatbotUI";
 
-export default function ChatbotAuthor(props) {
-  console.log(props);
+export default function ChatbotTopic(props) {
+  // console.log(props);
   return (
     <ChatbotButtonContainer className="flex-col">
       <ChatbotButton
@@ -19,9 +19,7 @@ export default function ChatbotAuthor(props) {
         Sức khỏe tâm lý
       </ChatbotButton>
       <ChatbotButton
-        onClick={() =>
-          props.actionProvider.fetchPosts("author", "economic")
-        }
+        onClick={() => props.actionProvider.fetchPosts("author", "economic")}
         className={""}
       >
         Kinh tế
