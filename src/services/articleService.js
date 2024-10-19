@@ -21,6 +21,7 @@ export const getArticlesByUserId = async (userId) => {
 };
 
 export const getArticle = async (id) => {
+  console.log("Hello");
   const response = await axios.get(`${API_URL}/${id}`);
   return response.data;
 };

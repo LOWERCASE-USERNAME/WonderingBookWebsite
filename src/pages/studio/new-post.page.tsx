@@ -82,23 +82,29 @@ export default function NewPost() {
           const articleFormData = new FormData();
           articleFormData.append("articleId", postData.articleId);
           articleFormData.append("title", postData.title);
-          articleFormData.append("curatorNote", postData.curatorNote.length != 0 ? postData.curatorNote : "None");
+          articleFormData.append("curatorNote", postData.curatorNote.length != 0 ? postData.curatorNote : "Trống");
           articleFormData.append("miscAuthor", String(postData.miscAuthor));
 
           if (postData.image) {
-            const response = await fetch(postData.image);
-            const blob = await response.blob();
-            articleFormData.append("image", blob);
+            if (postData.image.startsWith("blob:")) {
+              const response = await fetch(postData.image);
+              const blob = await response.blob();
+              articleFormData.append("image", blob);
+            } else {
+              articleFormData.append("defaultImage", postData.image);
+            }
           }
           putArticle(articleFormData)
         })(),
       ]);
 
-      // if (response != null) {
-      //   navigate("/write", { state: {} });
-      // }
+      toast.success("Bài viết đã được đăng. Bạn có thể tiếp tục cập nhật bằng nút 'Đăng bài viết'");
     } catch (error) {
-      console.error("Failed to create post", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Lỗi chưa dự kiến đã xảy ra', { duration: 10000 });
+      }
     }
   }
 

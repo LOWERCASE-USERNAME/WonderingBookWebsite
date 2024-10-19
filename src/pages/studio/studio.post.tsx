@@ -66,6 +66,7 @@ export default function Studio() {
         formData.append("title", selectedBook.title);
         formData.append("miscAuthor", selectedBook.authors);
         formData.append("defaultImage", selectedBook.imageLink);
+        formData.append("curatorNote", selectedBook.description);
       }
     } else {
       formData.append("title", String(null));

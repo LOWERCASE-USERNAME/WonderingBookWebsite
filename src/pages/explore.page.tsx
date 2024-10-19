@@ -37,7 +37,7 @@ export default function Explore() {
                     src={post.image ?? "default_post_image.png"}
                     className="object-contain w-full h-full p-4 bg-white"
                     onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                      e.currentTarget.src = "image_not_found.png"; // Fallback image
+                      e.currentTarget.src = "/image_not_found.png"; // Fallback image
                     }}
                   />
                 </div>

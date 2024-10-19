@@ -12,28 +12,34 @@ import { IdeaCardType } from "../types/ideaCardType";
 import { PostImageCard } from "../components/complex/cards/post/post-image-card.component";
 import { TableOfContentCard } from "../components/complex/cards/TOC/table-of-content-card.component";
 import { Bookmark, MessageCircle, Share2 } from "lucide-react";
+import { getArticle } from "../services/articleService";
+import { Article } from "../types/article";
 
 export default function PostDetail() {
   const { id } = useParams();
   const { state } = useLocation();
+  const [postData, setPostData] = useState<Article>(state);
   const { userInfo, setUserInfo } = useFetchUserInfo();
   const [ideaCards, setIdeaCards] = useState<IdeaCard[]>([]);
-
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (state) {
       window.scrollTo(0, 0);
     }
 
     const fetchData = async () => {
-      const response: IdeaCard[] = await getIdeaCardsByArticleId(id);
-      setIdeaCards(response.sort((a, b) => Number(a.order) - Number(b.order)) ?? []);
+      if (postData == null) {
+        const response: Article = await getArticle(id);
+        setPostData(response);
+      }
+
+      const response2: IdeaCard[] = await getIdeaCardsByArticleId(id);
+      setIdeaCards(response2.sort((a, b) => Number(a.order) - Number(b.order)) ?? []);
+      setLoading(false);
     }
 
     fetchData();
   }, [id])
-
-
 
   const handleRenderCard = (card: IdeaCard, index: number) => {
     switch (card.cardType) {
@@ -56,15 +62,15 @@ export default function PostDetail() {
 
   return (
     <>
-      <div className="container flex flex-col gap-6">
+      {!loading && <div className="container flex flex-col gap-6">
         <nav className="h-12">
           <Navigation userInfo={userInfo} setUserInfo={setUserInfo} />
         </nav>
         <section className="flex p-4 mt-8 ">
-          <PostImageCard imageSrc="/Subtle_Art_Of_Not_Giving_A_Fuck.png" className="ml-12" />
+          <PostImageCard imageSrc={postData.image ?? ""} className="ml-12" />
           <div className="mt-4 ml-4">
-            <h1 className="text-2xl font-semibold">Atomic Habits</h1>
-            <h2 className="italic">By <span className="text-lg font-bold">James Clear</span></h2>
+            <h1 className="text-2xl font-semibold">{postData.title}</h1>
+            <h2 className="italic">By <span className="text-lg font-bold">{postData.miscAuthor}</span></h2>
             {/* {additionalInfo} */}
             {/* {actionBar} */}
             <div className="flex gap-2 mt-12">
@@ -96,17 +102,16 @@ export default function PostDetail() {
           <aside className="col-span-2 col-start-5">
             <CuratorCard
               className="bg-transparent"
-              imageSrc="https://images.unsplash.com/photo-1631176093398-e106d8e9aa2c?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              name="TRAN HOANG GIANG"
-              identifier="@GIANGTH"
+              imageSrc="/default_user_icon.svg"
+              name={userInfo.fullname}
+              identifier={"@" + userInfo.userName}
               description="Interest in the world"
-              note={`One of the best books I've ever read about economics is "Capital in the Twenty-First Century" by Thomas Piketty. This monumental work delves deep into the historical evolution of wealth and income inequality. Piketty's analysis, supported by extensive data, illuminates the dynamics that drive the concentration of wealth and offers insights into how economic inequality has shaped society through different eras.
-
-              What sets this book apart is its accessibility. While it's grounded in rigorous economic theory and empirical research, Piketty's clear and engaging writing style makes complex concepts understandable to a broad audience.
-          `} />
+              note={postData.curatorNote}
+            />
           </aside>
         </div>
       </div>
+      }
     </>
   );
 }

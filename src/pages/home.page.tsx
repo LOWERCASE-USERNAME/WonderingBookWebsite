@@ -87,8 +87,6 @@ export default function Home() {
             </>
           }
         </div>
-
-        {/* <ChatbotComponent isOpenBot={isOpenBot} /> */}
       </div>
       <section className="h-96 bg-[#f9f4ef] grid grid-cols-2 divide-x-2 divide-gray-800 border-y-2 border-y-gray-800">
         <div className="flex flex-col content-start justify-center gap-4 p-4 mx-auto whitespace-pre-line">
