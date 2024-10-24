@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { getGoogleBooks } from "../../../services/googleBookService";
 import AsyncSelect from "react-select/async";
 import Select from "react-select";
 import { GoogleBook } from "../../../types/googleBook";
 import { CommonComponentProps } from "../../../lib/props";
+import _debounce from "lodash/debounce";
 
 interface GoogleBooksAutocompleteProps extends CommonComponentProps {
   handleBookChange: (book: GoogleBook | null) => void;
@@ -12,29 +13,37 @@ interface GoogleBooksAutocompleteProps extends CommonComponentProps {
 
 export const GoogleBooksAutocomplete = ({ handleBookChange, className }: GoogleBooksAutocompleteProps) => {
   const [books, setBooks] = useState<GoogleBook[]>([]);
+  const booksRef = useRef<GoogleBook[]>([]);
 
-  const searchBooks = async (query: string) => {
-    if (query.length < 3) return; // To avoid too many requests on short input
+  // Debounced function to search books after user stops typing
+  const searchBooksDebounced = useCallback(
+    _debounce(async (query: string, callback: (options: any) => void) => {
+      if (query.length < 3) {
+        callback([]);
+        return;
+      }
 
-    const response = await getGoogleBooks(query);
-    setBooks(response);
-    return response;
-  };
+      const response = await getGoogleBooks(query);
+      booksRef.current = response;
+      const options = response.map((book) => ({
+        value: book.id,
+        label: `${book.title} - ${book.authors}`,
+      }));
+      callback(options);  // Pass options to the select
+    }, 500),  // 500ms debounce delay
+    []
+  );
 
-  const loadOptions = async (inputValue: string, callback: (options: GoogleBook[]) => void) => {
-    const results = await searchBooks(inputValue);
-    const options = results.map((book: GoogleBook) => ({
-      value: book.id,
-      label: `${book.title} - ${book.authors}`,
-    }));
-    callback(options);
+  // Load options with debounce
+  const loadOptions = (inputValue: string, callback: (options: any) => void) => {
+    searchBooksDebounced(inputValue, callback);
   };
 
   const handleSelectChange = (selectedOption: any) => {
-    if (selectedOption == null) {
+    if (!selectedOption) {
       handleBookChange(null);
     } else {
-      const book = books.find((b) => b.id === selectedOption.value);
+      const book = booksRef.current.find((b) => b.id === selectedOption.value);
       handleBookChange(book ?? null);
     }
   };

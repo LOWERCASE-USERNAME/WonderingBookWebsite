@@ -20,6 +20,18 @@ export const getArticlesByUserId = async (userId) => {
   return response.data;
 };
 
+export const getArticlesByBookId = async (bookId) => {
+  const response = await axios.get(`${API_URL}/search-by-book-id?id=${bookId}`);
+  return response.data;
+};
+
+export const getArticlesByBook = async (bookName) => {
+  const response = await axios.get(
+    `${API_URL}/search-by-book?name=${bookName}`,
+  );
+  return response.data;
+};
+
 export const getArticle = async (id) => {
   console.log("Hello");
   const response = await axios.get(`${API_URL}/${id}`);

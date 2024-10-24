@@ -23,6 +23,7 @@ import AboutUs from "./pages/about-us.page.tsx";
 import Profile from "./pages/profile.page.tsx";
 import PremiumOffer from "./pages/premium-offer.page.tsx";
 import { gapi } from "gapi-script";
+import Search from "./pages/search.page.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,8 +31,9 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} errorElement={<ErrorBoundary />} />
       <Route path="/register" element={<Register />} errorElement={<ErrorBoundary />} />
       {/* <Route path="/admin" element={<Admin />} />*/}
-      <Route path="/home" element={<Home params={{ id: "FirstIdea" }} />} errorElement={<ErrorBoundary />} />
+      <Route path="/home" element={<Home />} errorElement={<ErrorBoundary />} />
       <Route path="/explore" element={<Explore />} errorElement={<ErrorBoundary />} />
+      <Route path="/search" element={<Search />} errorElement={<ErrorBoundary />} />
       <Route path="/aboutus" element={<AboutUs />} errorElement={<ErrorBoundary />} />
       <Route path="/profile" element={<Profile />} errorElement={<ErrorBoundary />} />
       <Route path="/profile/premium" element={<PremiumOffer />} errorElement={<ErrorBoundary />} />

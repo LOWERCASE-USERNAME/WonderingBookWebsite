@@ -57,7 +57,7 @@ export default function Studio() {
   const handleAddPost = async (source: string) => {
     const formData = new FormData();
     formData.append("userId", userInfo?.id);
-
+    console.log(selectedBook)
     if (source === "book") {
       if (selectedBook == null) {
         setBookSourceModalOpen(true);
@@ -67,6 +67,7 @@ export default function Studio() {
         formData.append("miscAuthor", selectedBook.authors);
         formData.append("defaultImage", selectedBook.imageLink);
         formData.append("curatorNote", selectedBook.description);
+        formData.append("serializedBook", JSON.stringify(selectedBook));
       }
     } else {
       formData.append("title", String(null));
