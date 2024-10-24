@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { register } from "../../services/authService";
 import toast from "react-hot-toast";
+import axios from "axios";
+import GoogleLogin from "react-google-login";
+import useCustomToast from "../../hooks/useCustomToast";
 
 export function Register() {
   const [userData, setUserData] = useState({
@@ -10,6 +13,7 @@ export function Register() {
     username: '',
     password: '',
   });
+  const { getToaster } = useCustomToast();
   const navigate = useNavigate();
 
   const handleRegister = async (e: any) => {
@@ -28,8 +32,42 @@ export function Register() {
       }
     }
   }
+
+  const handleGoogleLogin = async (response) => {
+    const baseApiUrl =
+      import.meta.env.MODE === 'development'
+        ? 'https://localhost:7213/api' // Replace with your dev port
+        : 'http://13.76.25.67:8080/api'; // Replace with your production URL
+
+    try {
+      const res = await fetch(`${baseApiUrl}/user/google-login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response.tokenId), // tokenId from Google login response
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("user-token", JSON.stringify(data.token));
+        console.log(data.token)
+        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+        toast.success("Đăng nhập thành công với Google");
+        setTimeout(_ => navigate("/home"), 2000);
+      } else {
+        const errorData = await res.json();
+        toast.error(errorData.message || 'Đăng nhập thất bại với Google');
+      }
+
+    } catch (error) {
+      console.error("Lỗi bất ngờ đã xảy ra khi cố đăng nhập với Google: ", error);
+    }
+  };
+
   return (
     <div className="z-10 flex flex-col items-center w-1/2 h-screen gap-6 p-16 mx-auto text-center bg-orange-50">
+      {getToaster()}
       <h2 className="text-3xl">Đăng ký để đọc sách thôi!</h2>
       <form onSubmit={handleRegister} className="flex flex-col items-center justify-center gap-4">
         <div>
@@ -66,12 +104,24 @@ export function Register() {
         />
       </form>
       <hr className="w-full border-t-2 border-black" />
-      <button className="relative flex items-start h-10 gap-4 border-2 border-gray-500 rounded-none w-72">
-        <span className="flex items-center justify-center w-10 h-10">
-          <img src="/public/google_icon.png" className="w-4 h-4" />
-        </span>
-        <span className="absolute w-48 leading-10 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">Tiếp tục bằng Google</span>
-      </button>
+      <GoogleLogin
+        clientId="798378210108-8thhu0hg1hc7leafgetqlpvbisur36gg.apps.googleusercontent.com"
+        render={renderProps => (
+          <button
+            onClick={renderProps.onClick} disabled={renderProps.disabled}
+            className="relative flex items-start h-10 gap-4 border-2 border-gray-500 rounded-none w-72">
+            <span className="flex items-center justify-center w-10 h-10">
+              <img src="/google_icon.png" className="w-4 h-4" />
+            </span>
+            <span className="absolute w-48 leading-10 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">Tiếp tục bằng Google</span>
+          </button>
+        )
+        }
+        buttonText="Login with Google"
+        onSuccess={handleGoogleLogin}
+        onFailure={handleGoogleLogin}
+        cookiePolicy={'single_host_origin'}
+      />
       <p className="flex justify-around w-64">
         <span>Bạn đã có tài khoản?</span>
         <a className="underline" href="/login"> Đăng nhập tại đây</a>

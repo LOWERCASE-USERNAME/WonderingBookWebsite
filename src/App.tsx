@@ -22,6 +22,7 @@ import Explore from "./pages/explore.page.tsx";
 import AboutUs from "./pages/about-us.page.tsx";
 import Profile from "./pages/profile.page.tsx";
 import PremiumOffer from "./pages/premium-offer.page.tsx";
+import { gapi } from "gapi-script";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -66,6 +67,14 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  gapi.load("client:auth2", () => {
+    gapi.client.init({
+      clientId:
+        "798378210108-8thhu0hg1hc7leafgetqlpvbisur36gg.apps.googleusercontent.com",
+      plugin_name: "chat",
+    });
+  });
+
   return (
     <>
       <RouterProvider router={router} />

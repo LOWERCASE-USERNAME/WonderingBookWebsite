@@ -215,6 +215,7 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
                 label: "Đăng xuất", icon: <LogOut size={16} strokeWidth={2.5} />, action: () => {
                   logout()
                   setUserInfo(null);
+                  navigate('/home');
                 }, className: "text-red-700 hover:bg-red-100 hover:text-red-900"
               },
             ]}
