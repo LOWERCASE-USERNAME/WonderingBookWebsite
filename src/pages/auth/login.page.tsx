@@ -18,12 +18,12 @@ export function Login() {
       await login({ email, password, isRemember: true })
 
       toast.success("Đăng nhập thành công");
-      setTimeout(_ => navigate("/home"), 2000);
+      setTimeout(_ => navigate("/home"), 1000);
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);
       } else {
-        toast.error('Lỗi chưa dự kiến đã xảy ra', { duration: 10000 });
+        toast.error('Lỗi chưa dự kiến đã xảy ra', { duration: 1000 });
       }
     }
   }
@@ -49,7 +49,7 @@ export function Login() {
         console.log(data.token)
         axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
         toast.success("Đăng nhập thành công với Google");
-        setTimeout(_ => navigate("/home"), 2000);
+        setTimeout(_ => navigate("/home"), 1000);
       } else {
         const errorData = await res.json();
         toast.error(errorData.message || 'Đăng nhập thất bại với Google');

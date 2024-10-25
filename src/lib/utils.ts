@@ -11,3 +11,7 @@ export function dateFormat(dateStr: string): string {
   const formattedDate = formatter.format(date);
   return formattedDate;
 }
+
+export function formatVND(amount: number) {
+  return amount.toLocaleString("vi-VN") + " VNĐ";
+}

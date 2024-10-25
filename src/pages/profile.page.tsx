@@ -1,12 +1,23 @@
 import Navigation from "../components/navigations/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFetchUserInfo } from "../hooks/useFetchUserInfo";
 import { EmptyCard } from "../components/basic/empty-card.component";
-import { ChevronRight, History, TicketPercent } from "lucide-react";
+import { ChevronRight, History, TicketPercent, Wallet as LucideWallet } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
+import axios from "axios";
+import { Wallet } from "../types/wallet";
+import { formatVND } from "../lib/utils";
 
 export default function Profile() {
   const { userInfo, setUserInfo } = useFetchUserInfo();
+  const [personalWallet, setPersonalWallet] = useState<Wallet | null>(null)
+  useEffect(() => {
+    const fetchWallet = async () => {
+      const response = await axios.get(`FinacialTransaction/get-personal-wallet?userId=${userInfo.id}`);
+      setPersonalWallet(response.data);
+    }
+    fetchWallet();
+  }, [userInfo])
 
   return (
     <>
@@ -25,7 +36,18 @@ export default function Profile() {
         </EmptyCard>
 
         <EmptyCard className="bg-[#F4EBE0] drop-shadow-lg items-start gap-2">
-          <h1 className="mt-2 mb-2 text-3xl">Thanh toán</h1>
+          <div className="flex items-end justify-between w-full mb-2">
+            <h1 className="mt-2 mb-2 text-3xl">Thanh toán</h1>
+            <div className="flex gap-2 mb-1">
+              <span className="inline-flex gap-1">
+                <LucideWallet />
+                Số dư:
+              </span>
+              <span>{formatVND(personalWallet?.balance ?? 0)}</span>
+            </div>
+          </div>
+
+
           <button className="flex items-center justify-between w-full">
             <div className="flex items-center gap-4">
               <History className="w-5 h-5" />

@@ -95,7 +95,13 @@ export default function Home() {
             Thử ngay với các gói <span className="italic">Premium</span> ưu đãi!<br />
             <small className="text-lg tracking-normal">Chỉ từ 40k, bạn sẽ sở hữu hàng ngàn ưu đãi đi kèm</small>
           </p>
-          <button className="px-12 py-2 font-sans text-lg font-semibold tracking-widest text-white rounded-full bg-rose-300 w-fit">Xem ngay!</button>
+          <button
+            onClick={() => {
+              document.querySelector('#homepage-offer')?.scrollIntoView({
+                behavior: 'smooth'
+              });
+            }}
+            className="px-12 py-2 font-sans text-lg font-semibold tracking-widest text-white rounded-full bg-rose-300 w-fit">Xem ngay!</button>
         </div>
         <div className="h-full p-4 bg-gray-300 bg-[url('/dip-devices.jpg')] bg-cover" >
         </div>
@@ -108,7 +114,9 @@ export default function Home() {
           Tiếp cận kiến thức nhanh chóng và hiệu quả. <br />
           Khám phá ngay!
         </blockquote>
-        <button className="px-8 py-2 my-8 font-sans text-lg font-semibold tracking-widest border-2 border-black rounded-full w-fit">Xem ngay!</button>
+        <Link
+          to={"/explore"}
+          className="px-8 py-2 my-8 font-sans text-lg font-semibold tracking-widest border-2 border-black rounded-full w-fit">Xem ngay!</Link>
       </section>
       <hr className="border-t-2 border-gray-800" />
       <section className="p-4 pt-24 pb-24 bg-white">
@@ -270,6 +278,7 @@ export default function Home() {
           </div>
 
           <div
+            id="homepage-offer"
             className="p-6 border border-indigo-600 shadow-sm rounded-2xl ring-1 ring-indigo-600 sm:px-8 lg:p-12"
           >
             <div className="flex items-center justify-center gap-2">
@@ -326,7 +335,7 @@ export default function Home() {
             </ul>
 
             <a
-              href="#"
+              href="/profile/premium"
               className="block px-12 py-3 mt-8 text-sm font-medium text-center text-white bg-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-700 hover:ring-1 hover:ring-indigo-700 focus:outline-none focus:ring active:text-indigo-500"
             >
               Get Started

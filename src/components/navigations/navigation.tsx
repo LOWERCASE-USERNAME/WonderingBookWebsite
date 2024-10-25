@@ -1,43 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Popover,
-  PopoverButton,
   PopoverGroup,
-  PopoverPanel,
-  Transition,
 } from "@headlessui/react";
 import {
-  ArrowPathIcon,
   Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  PhoneIcon,
-  PlayCircleIcon,
-} from "@heroicons/react/20/solid";
 import { RoundedImage } from "../basic/rounded-image.component";
-import { CircleUserRound, LogOut, Menu, NotebookPen, PenLine, Rss, Search, Trash2 } from "lucide-react";
+import { LogOut, Menu, NotebookPen, PenLine, Search } from "lucide-react";
 import DropdownMenu from "../complex/inputs/dropdown-menu.component";
 import { getCurrentUser, logout } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { getArticlesByBook } from "../../services/articleService";
 import { LocalBooksAutocomplete } from "../complex/inputs/local-book-autocomplete";
 import { Book } from "../../types/book";
+import { User } from "../../types/user";
 
 interface NavigationProps {
   userInfo: object | null;
-  setUserInfo: (userInfo: object | null) => void;
+  setUserInfo: (userInfo: User | null) => void;
 }
 
 export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
@@ -121,9 +104,9 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
             options={[
               { label: "Quản lý nội dung" },
               { label: "Tạo bài viết", icon: <PenLine size={16} strokeWidth={2.5} />, action: () => navigate(`/studio`) },
-              { label: "Thông tin", icon: <NotebookPen size={16} strokeWidth={2.5} />, action: () => navigate(`/info`) },
               { label: "Quản lý tài khoản" },
               { label: "Hồ sơ", icon: <Menu size={16} strokeWidth={2.5} />, action: () => navigate(`/profile`) },
+              { label: "Thông tin", icon: <NotebookPen size={16} strokeWidth={2.5} />, action: () => navigate(`/info`) },
               {
                 label: "Đăng xuất", icon: <LogOut size={16} strokeWidth={2.5} />, action: () => {
                   logout()
@@ -147,14 +130,15 @@ export default function Navigation({ userInfo, setUserInfo }: NavigationProps) {
       <MobileNavigation
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
-        userInfo={userInfo}
+        // userInfo={userInfo}
         setUserInfo={setUserInfo}
       />
     </header >
   );
 }
 
-function MobileNavigation({ mobileMenuOpen, setMobileMenuOpen, userInfo, setUserInfo }) {
+function MobileNavigation({ mobileMenuOpen, setMobileMenuOpen, setUserInfo }:
+  { mobileMenuOpen: boolean, setMobileMenuOpen: (v: boolean) => void, setUserInfo: (u: User | null) => void }) {
   const navigate = useNavigate();
   const token = getCurrentUser();
   const decodedToken = token && jwtDecode(token);

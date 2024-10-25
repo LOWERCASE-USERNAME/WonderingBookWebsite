@@ -9,7 +9,6 @@ import "./index.css";
 
 import ErrorBoundary from "./routes/errors/error.jsx";
 import Error404 from "./routes/errors/error404.tsx";
-import { BookCard } from "./components/complex/cards/book/book-card.component.tsx";
 import PostDetail from "./pages/post-detail.page.tsx";
 import Home from "./pages/home.page.tsx";
 import { ProtectedRoute } from "./routes/protected_route.tsx";
@@ -24,6 +23,7 @@ import Profile from "./pages/profile.page.tsx";
 import PremiumOffer from "./pages/premium-offer.page.tsx";
 import { gapi } from "gapi-script";
 import Search from "./pages/search.page.tsx";
+import Information from "./pages/information.page.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,9 +34,23 @@ const router = createBrowserRouter(
       <Route path="/home" element={<Home />} errorElement={<ErrorBoundary />} />
       <Route path="/explore" element={<Explore />} errorElement={<ErrorBoundary />} />
       <Route path="/search" element={<Search />} errorElement={<ErrorBoundary />} />
+      <Route path="/community" element={<ComingSoon />} errorElement={<ErrorBoundary />} />
       <Route path="/aboutus" element={<AboutUs />} errorElement={<ErrorBoundary />} />
-      <Route path="/profile" element={<Profile />} errorElement={<ErrorBoundary />} />
-      <Route path="/profile/premium" element={<PremiumOffer />} errorElement={<ErrorBoundary />} />
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      } errorElement={<ErrorBoundary />} />
+      <Route path="/info" element={
+        <ProtectedRoute>
+          <Information />
+        </ProtectedRoute>
+      } errorElement={<ErrorBoundary />} />
+      <Route path="/profile/premium" element={
+        <ProtectedRoute>
+          <PremiumOffer />
+        </ProtectedRoute>
+      } errorElement={<ErrorBoundary />} />
       <Route
         path="/write/:id"
         element={
@@ -58,7 +72,9 @@ const router = createBrowserRouter(
       <Route
         path="/detail/:id"
         element={
-          <PostDetail />
+          <ProtectedRoute>
+            <PostDetail />
+          </ProtectedRoute>
         }
         errorElement={<ErrorBoundary />}
       />
