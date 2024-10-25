@@ -2,8 +2,6 @@ import { memo, useContext, useEffect, useState } from "react";
 import { CommonComponentProps } from "../../../../lib/props";
 import { cn } from "../../../../lib/utils";
 import { CARD_CHARACTER_LIMIT } from "./const";
-import DropdownMenu from "../../inputs/dropdown-menu.component";
-import { Trash2 } from "lucide-react";
 
 interface IdeaCardFooterProps extends CommonComponentProps {
   isReadOnly?: boolean;
@@ -13,14 +11,7 @@ interface IdeaCardFooterProps extends CommonComponentProps {
   handleDeleteCard?: () => void;
 }
 
-export const IdeaCardFooter = function ({ children, className, readCounter, saveCounter, isReadOnly = true, textCounter = 0, handleDeleteCard }: IdeaCardFooterProps) {
-  const menuIcon = (
-    <span>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
-      </svg>
-    </span>
-  )
+export const IdeaCardFooter = function ({ className, readCounter, saveCounter, isReadOnly = true, textCounter = 0, handleDeleteCard }: IdeaCardFooterProps) {
 
   return (
     <div className={cn("w-full flex justify-between text-[0.6rem]) -mb-4", className)}>
@@ -45,14 +36,6 @@ export const IdeaCardFooter = function ({ children, className, readCounter, save
               <span className="text-xs text-gray-700">{saveCounter || 0} lượt lưu</span>
             </div>
           </div>}
-      </div>
-      <div className="mr-2 text-gray-500">
-        {/* {isReadOnly && <div className="mb-1 text-sm">{readCounter || 0} reads</div>} */}
-        <DropdownMenu buttonIcon={menuIcon} buttonLabel="" options={[
-          { label: "Delete", icon: <Trash2 />, action: () => handleDeleteCard && handleDeleteCard() }]}
-          className="translate-x-1/2"
-          direction="up"
-        />
       </div>
     </div>
   );
