@@ -18,8 +18,10 @@ export const useFetchUserInfo = () => {
       } else {
         try {
           const userId = getUserIdFromToken();
+          console.log(userId);
           if (userId) {
             const response = await getUserInfo(userId);
+            console.log(response);
             setUserInfo(response);
             Cookies.set('userInfo', JSON.stringify(response), { expires: 1 }); // 1-day expiry
           } else {

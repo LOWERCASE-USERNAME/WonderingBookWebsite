@@ -45,6 +45,7 @@ export default function Studio() {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(userInfo.id);
       if (userInfo?.id) {
         const response = await getArticlesByUserId(userInfo?.id);
         setDraftPosts(response);

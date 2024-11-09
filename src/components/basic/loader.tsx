@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { cn } from "../../lib/utils";
 
-const CustomLoader = () => {
+const CustomLoader = (props: { className: string }) => {
   return (
     <StyledWrapper>
-      <div className="spinner">
+      <div className={cn("spinner", props.className)}>
         <div />
         <div />
         <div />

@@ -10,6 +10,11 @@ export const getArticles = async () => {
   return response.data;
 };
 
+export const getArticlesExtended = async () => {
+  const response = await axios.get(API_URL + "/admin");
+  return response.data;
+};
+
 export const recommendArticles = async () => {
   const response = await axios.get(`${API_URL}/recommend`);
   return response.data;
@@ -48,4 +53,12 @@ export const putArticle = async (article) => {
   );
   return response.data;
 };
+export const putArticleStatus = async (articleStatusDTOs) => {
+  const response = await axios.put(
+    `${API_URL}/update-status-bulk`,
+    articleStatusDTOs,
+  );
+  return response.data;
+};
+
 export const deleteArticle = (id) => {};

@@ -11,6 +11,7 @@ import { getArticles } from "../services/articleService";
 import { Link } from "react-router-dom";
 import { dateFormat } from "../lib/utils";
 import ChatbotComponent from "../components/complex/cards/chatbot/chatbot";
+import { debug } from "console";
 
 export default function Home() {
   const { userInfo, setUserInfo } = useFetchUserInfo();

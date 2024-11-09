@@ -53,6 +53,7 @@ export const getUserIdFromToken = () => {
   if (!token) return null;
 
   const decodedToken = jwtDecode(token);
+  console.log(decodedToken.sub);
   return decodedToken.sub;
 };
 

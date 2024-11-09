@@ -11,8 +11,17 @@ export interface Article {
   curatorNote: string;
   image: string | null;
   dateCreated: string;
+  status: ArticleStatus | null;
   user: User;
   book: Book;
   articleTopics?: ArticleTopic[];
   ideaCards?: IdeaCard[];
+}
+
+export enum ArticleStatus {
+  Draft,
+  Pending,
+  Published,
+  NotApproved,
+  Archived,
 }

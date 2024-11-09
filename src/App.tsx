@@ -24,6 +24,7 @@ import PremiumOffer from "./pages/premium-offer.page.tsx";
 import { gapi } from "gapi-script";
 import Search from "./pages/search.page.tsx";
 import Information from "./pages/information.page.tsx";
+import { ArticleAdminPage } from "./pages/admin/article-admin.page.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -75,6 +76,13 @@ const router = createBrowserRouter(
           <ProtectedRoute>
             <PostDetail />
           </ProtectedRoute>
+        }
+        errorElement={<ErrorBoundary />}
+      />
+      <Route
+        path="/admin"
+        element={
+          <ArticleAdminPage />
         }
         errorElement={<ErrorBoundary />}
       />

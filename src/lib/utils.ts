@@ -12,6 +12,15 @@ export function dateFormat(dateStr: string): string {
   return formattedDate;
 }
 
+export function dateTimeFormat(dateStr: string): string {
+  const date = new Date(dateStr);
+  const formatter = new Intl.DateTimeFormat("vi-VN", {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
+  return formatter.format(date);
+}
+
 export function formatVND(amount: number) {
   return amount.toLocaleString("vi-VN") + " VNĐ";
 }
