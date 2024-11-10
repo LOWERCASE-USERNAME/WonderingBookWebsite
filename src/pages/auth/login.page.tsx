@@ -13,7 +13,7 @@ export function Login() {
   const { getToaster } = useCustomToast();
 
   useEffect(() => {
-    if (state.error) {
+    if (state && state.error) {
       toast.error(state.error);
     }
   }, [state])
