@@ -3,6 +3,16 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 const API_URL = "/User";
 
+export const getAllUser = async (userData) => {
+  const res = await axios.get(`${API_URL}`, userData);
+  return res.data;
+};
+
+export const putUserStatus = async (userId, status) => {
+  const res = await axios.put(`${API_URL}/status/${userId}/${status}`);
+  return res.data;
+};
+
 export const register = async (userData) => {
   const res = await axios.post(`${API_URL}/register`, userData);
   return res.data;

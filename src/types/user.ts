@@ -1,4 +1,5 @@
 import { Article } from "./article";
+import { Wallet } from "./wallet";
 
 export interface User {
   id: string;
@@ -10,4 +11,11 @@ export interface User {
   lastActiveAt: string;
   isAdmin: boolean;
   articles: Article[];
+  status: UserStatus | null;
+  wallet: Wallet | null;
+}
+
+export enum UserStatus {
+  Active,
+  Banned,
 }

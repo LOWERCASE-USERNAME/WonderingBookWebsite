@@ -11,7 +11,7 @@ import ErrorBoundary from "./routes/errors/error.jsx";
 import Error404 from "./routes/errors/error404.tsx";
 import PostDetail from "./pages/post-detail.page.tsx";
 import Home from "./pages/home.page.tsx";
-import { ProtectedManagerRoute, ProtectedRoute } from "./routes/protected_route.tsx";
+import { ProtectedAdminRoute, ProtectedManagerRoute, ProtectedRoute } from "./routes/protected_route.tsx";
 import { Login } from "./pages/auth/login.page.tsx";
 import { Register } from "./pages/auth/register.page.tsx";
 import NewPost from "./pages/studio/new-post.page.tsx";
@@ -26,6 +26,7 @@ import Search from "./pages/search.page.tsx";
 import Information from "./pages/information.page.tsx";
 import { ArticleAdminPage } from "./pages/admin/article-admin.page.tsx";
 import { AdminPage } from "./pages/admin/admin.page.tsx";
+import { UserAdminPage } from "./pages/admin/user-admin.page.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -92,6 +93,15 @@ const router = createBrowserRouter(
         <Route
           path="article"
           element={<ArticleAdminPage />}
+          errorElement={<ErrorBoundary />}
+        />
+        <Route
+          path="user"
+          element={
+            <ProtectedAdminRoute>
+              <UserAdminPage />
+            </ProtectedAdminRoute>
+          }
           errorElement={<ErrorBoundary />}
         />
       </Route>

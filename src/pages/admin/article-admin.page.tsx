@@ -6,8 +6,7 @@ import {
 } from 'material-react-table';
 import { Article, ArticleStatus } from "../../types/article";
 import { getArticlesExtended, putArticleStatus } from "../../services/articleService";
-import { Sidebar } from "../../components/navigations/sidebar";
-import { cn, dateTimeFormat } from "../../lib/utils";
+import { dateTimeFormat } from "../../lib/utils";
 import { Table, Box, Button, ListItemIcon, MenuItem, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Tooltip, Tabs, Tab } from "@mui/material";
 import CustomLoader from "../../components/basic/loader";
 import DOMPurify from "dompurify";

@@ -111,7 +111,7 @@ export const Sidebar = ({
               href: "#",
               icon: (
                 <img
-                  src="default_user_icon.svg"
+                  src="/default_user_icon.svg"
                   className="flex-shrink-0 rounded-full h-7 w-7"
                   alt="Avatar"
                 />
@@ -236,7 +236,7 @@ export const Logo = () => {
       href="/home"
       className="relative z-20 flex items-center py-1 space-x-2 text-sm font-normal text-black"
     >
-      <img src="moodbook_logo.png" className="flex-shrink-0 w-6 h-5 rounded-tl-lg rounded-tr-sm rounded-bl-sm rounded-br-lg dark:bg-white" />
+      <img src="/moodbook_logo.png" className="flex-shrink-0 w-6 h-5 rounded-tl-lg rounded-tr-sm rounded-bl-sm rounded-br-lg dark:bg-white" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

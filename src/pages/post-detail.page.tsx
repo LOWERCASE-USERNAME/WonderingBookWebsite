@@ -14,6 +14,8 @@ import { TableOfContentCard } from "../components/complex/cards/TOC/table-of-con
 import { Bookmark, MessageCircle, Share2 } from "lucide-react";
 import { getArticle } from "../services/articleService";
 import { Article } from "../types/article";
+import { ComingSoon } from "../routes/errors/comingSoon";
+import ReadingLimitReached from "../routes/errors/limitReach";
 
 export default function PostDetail() {
   const { id } = useParams();
@@ -22,6 +24,8 @@ export default function PostDetail() {
   const { userInfo, setUserInfo } = useFetchUserInfo();
   const [ideaCards, setIdeaCards] = useState<IdeaCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [limitReached, setLimitReached] = useState(false);
+
   useEffect(() => {
     if (state) {
       window.scrollTo(0, 0);
@@ -33,13 +37,23 @@ export default function PostDetail() {
         setPostData(response);
       }
 
-      const response2: IdeaCard[] = await getIdeaCardsByArticleId(id);
+      const response2: IdeaCard[] = await getIdeaCardsByArticleId(id)
+        .catch(() => {
+          setLimitReached(true);
+          setIdeaCards([]);
+          return;
+        });
+
       setIdeaCards(response2.sort((a, b) => Number(a.order) - Number(b.order)) ?? []);
       setLoading(false);
     }
 
     fetchData();
   }, [id])
+
+  if (limitReached) {
+    return <ReadingLimitReached />
+  }
 
   const handleRenderCard = (card: IdeaCard, index: number) => {
     switch (card.cardType) {
