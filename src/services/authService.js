@@ -40,6 +40,20 @@ export const isTokenValid = (token) => {
   }
 };
 
+export const getUserRole = () => {
+  const user = getCurrentUser();
+  if (!user) return false;
+
+  try {
+    const decoded = jwtDecode(user);
+    return decoded[
+      "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+    ];
+  } catch (err) {
+    return false;
+  }
+};
+
 export const isAuthenticated = () => {
   const user = getCurrentUser();
   if (!user) return false;
@@ -63,6 +77,7 @@ export const getUserInfo = async (userId) => {
       Authorization: `Bearer ${getCurrentUser()}`, // Pass the token in headers
     },
   });
+  console.log(response);
 
   return response.data.userInfo;
 };

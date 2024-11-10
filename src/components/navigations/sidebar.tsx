@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconArrowLeft, IconBrandTabler, IconMenu2, IconSettings, IconUserBolt, IconX } from "@tabler/icons-react";
+import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
 
 interface Links {
   label: string;
@@ -61,33 +61,34 @@ export const Sidebar = ({
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
 }) => {
+  const { userInfo, setUserInfo } = useFetchUserInfo();
   const links = [
     {
-      label: "Dashboard",
-      href: "#",
+      label: "Article",
+      href: "article",
       icon: (
-        <IconBrandTabler className="flex-shrink-0 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+        <></>
       ),
     },
     {
-      label: "Profile",
-      href: "#",
+      label: "User",
+      href: "user",
       icon: (
-        <IconUserBolt className="flex-shrink-0 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+        <></>
       ),
     },
-    {
-      label: "Settings",
-      href: "#",
-      icon: (
-        <IconSettings className="flex-shrink-0 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
-      ),
-    },
+    // {
+    //   label: "Settings",
+    //   href: "#",
+    //   icon: (
+    //     <IconSettings className="flex-shrink-0 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+    //   ),
+    // },
     {
       label: "Logout",
       href: "#",
       icon: (
-        <IconArrowLeft className="flex-shrink-0 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+        <></>
       ),
     },
   ];
@@ -106,11 +107,11 @@ export const Sidebar = ({
         <div>
           <SidebarLink
             link={{
-              label: "Manu Arora",
+              label: userInfo?.fullname ?? "Anonymous",
               href: "#",
               icon: (
                 <img
-                  src="https://assets.aceternity.com/manu.png"
+                  src="default_user_icon.svg"
                   className="flex-shrink-0 rounded-full h-7 w-7"
                   alt="Avatar"
                 />
@@ -168,10 +169,11 @@ export const MobileSidebar = ({
         {...props}
       >
         <div className="z-20 flex justify-end w-full">
-          <IconMenu2
+          {/* <IconMenu2
             className="text-neutral-800 dark:text-neutral-200"
             onClick={() => setOpen(!open)}
-          />
+          /> */}
+
         </div>
         <AnimatePresence>
           {open && (
@@ -189,7 +191,7 @@ export const MobileSidebar = ({
                 className="absolute z-50 right-10 top-10 text-neutral-800 dark:text-neutral-200"
                 onClick={() => setOpen(!open)}
               >
-                <IconX />
+                {/* <IconX /> */}
               </div>
               {children}
             </motion.div>
@@ -231,16 +233,16 @@ export const SidebarLink = ({
 export const Logo = () => {
   return (
     <a
-      href="#"
+      href="/home"
       className="relative z-20 flex items-center py-1 space-x-2 text-sm font-normal text-black"
     >
-      <div className="flex-shrink-0 w-6 h-5 bg-black rounded-tl-lg rounded-tr-sm rounded-bl-sm rounded-br-lg dark:bg-white" />
+      <img src="moodbook_logo.png" className="flex-shrink-0 w-6 h-5 rounded-tl-lg rounded-tr-sm rounded-bl-sm rounded-br-lg dark:bg-white" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium text-black whitespace-pre dark:text-white"
       >
-        Acet Labs
+        Moodbook
       </motion.span>
     </a>
   );

@@ -1,15 +1,22 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { login } from "../../services/authService";
 import toast from 'react-hot-toast';
 import useCustomToast from "../../hooks/useCustomToast";
 import { GoogleLogin } from 'react-google-login';
 import axios from "axios";
 export function Login() {
+  const { state } = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const { getToaster } = useCustomToast();
+
+  useEffect(() => {
+    if (state.error) {
+      toast.error(state.error);
+    }
+  }, [state])
 
   const handleLogin = async (e: any) => {
     e.preventDefault();

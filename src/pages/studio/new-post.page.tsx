@@ -13,7 +13,7 @@ import { GlowingButton } from "../../components/basic/button";
 import { SideWidget } from "../../components/complex/widgets/side-widget";
 import { getArticle, putArticle } from "../../services/articleService";
 import { deleteIdeaCard, postIdeaCardBulk, putIdeaCardBulk } from "../../services/ideaCardService";
-import { Article } from "../../types/article";
+import { Article, ArticleStatus } from "../../types/article";
 import { IdeaCard } from "../../types/ideaCard";
 import { IdeaCardType } from "../../types/ideaCardType";
 import { useFetchUserInfo } from "../../hooks/useFetchUserInfo";
@@ -50,7 +50,7 @@ export default function NewPost() {
     fetchData();
   }, []);
 
-  const handleSubmitPost = async () => {
+  const handleSubmitPost = async (status: number) => {
     try {
       const createFormData = new FormData();
       const updateFormData = new FormData();
@@ -84,7 +84,7 @@ export default function NewPost() {
           articleFormData.append("title", postData.title);
           articleFormData.append("curatorNote", postData.curatorNote.length != 0 ? postData.curatorNote : "Trống");
           articleFormData.append("miscAuthor", String(postData.miscAuthor));
-
+          articleFormData.append("status", status.toString());
           if (postData.image) {
             if (postData.image.startsWith("blob:")) {
               const response = await fetch(postData.image);
@@ -98,7 +98,11 @@ export default function NewPost() {
         })(),
       ]);
 
-      toast.success("Bài viết đã được đăng. Bạn có thể tiếp tục cập nhật bằng nút 'Đăng bài viết'");
+      if (status === ArticleStatus.Pending) {
+        toast.success("Bài viết đã được gửi đến đội ngũ kiểm duyệt của chúng tôi. Bạn có thể tiếp tục cập nhật bằng nút 'Đăng bài viết' trong lúc chờ chúng tôi xét duyệt.");
+      } else if (status === ArticleStatus.Draft) {
+        toast.success("Bản nháp đã được lưu.");
+      }
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -187,7 +191,6 @@ export default function NewPost() {
     curCardIndex = result.findIndex(card => card.ideaCardId === id);
     const cardElement = document.getElementById(`card-${curCardIndex}`);
     if (cardElement) {
-      console.log(cardElement);
       cardElement.scrollIntoView({ behavior: "smooth" });
     }
   }
@@ -268,12 +271,12 @@ export default function NewPost() {
           />
         </EmptyCard>
         <div className="flex-[2_1_auto]">
-          <textarea className="w-full px-1 mt-4 overflow-hidden text-2xl font-semibold outline-none resize-none"
+          <textarea className="w-full mt-4 overflow-hidden text-2xl font-semibold outline-none resize-none"
             value={postData.title}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleUpdateTitle(e)}
             placeholder="Tiêu đề" spellCheck={false} ref={titleRef} rows={1} />
-          <h2 className="mt-4 italic">
-            By <input className="px-1 text-lg italic font-bold outline-none"
+          <h2 className="">
+            By <input className="px-1 text-lg font-bold outline-none"
               value={String(postData.miscAuthor)}
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleUpdatePost({ miscAuthor: e.target.value })}
               placeholder="Tác giả" spellCheck={false} />
@@ -281,7 +284,10 @@ export default function NewPost() {
           {/* : <h2 className="mt-4 italic">By <span className="text-lg font-bold">{postData.author}</span></h2>} */}
           {/* {additionalInfo} */}
           {/* {actionBar} */}
-          <GlowingButton content="Đăng bài viết" className="mt-8 bg-[#E1DCC5]" onClick={handleSubmitPost} />
+          <div className="flex gap-4">
+            <GlowingButton content="Lưu bản nháp" className="mt-8 bg-[#c5e1d2] hover:shadow-none" onClick={() => handleSubmitPost(ArticleStatus.Draft)} />
+            <GlowingButton content="Đăng bài viết" className="mt-8 bg-[#E1DCC5] hover:shadow-none" onClick={() => handleSubmitPost(ArticleStatus.Pending)} />
+          </div>
         </div>
         <EmptyCard className="flex-1">
 

@@ -2,7 +2,7 @@ import Navigation from "../components/navigations/navigation";
 import React, { useEffect, useState } from "react";
 import { useFetchUserInfo } from "../hooks/useFetchUserInfo";
 import { Article } from "../types/article";
-import { getArticles } from "../services/articleService";
+import { getPublishedArticles } from "../services/articleService";
 import { Link } from "react-router-dom";
 import { dateFormat } from "../lib/utils";
 export default function Explore() {
@@ -11,7 +11,7 @@ export default function Explore() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await getArticles();
+      const response = await getPublishedArticles();
       setPosts(response);
     }
 

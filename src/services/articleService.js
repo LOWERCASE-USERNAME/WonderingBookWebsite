@@ -15,6 +15,11 @@ export const getArticlesExtended = async () => {
   return response.data;
 };
 
+export const getPublishedArticles = async () => {
+  const response = await axios.get(API_URL + "/user");
+  return response.data;
+};
+
 export const recommendArticles = async () => {
   const response = await axios.get(`${API_URL}/recommend`);
   return response.data;

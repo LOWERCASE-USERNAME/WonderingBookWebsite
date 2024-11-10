@@ -14,6 +14,8 @@ import { GoogleBooksAutocomplete } from "../../components/complex/inputs/google-
 import { GoogleBook } from "../../types/googleBook";
 import toast from "react-hot-toast";
 import useCustomToast from "../../hooks/useCustomToast";
+import { Box, Tab, Tabs } from "@mui/material";
+import { getUserRole } from "../../services/authService";
 
 const sources = [
   {
@@ -41,7 +43,7 @@ export default function Studio() {
   // const [bookSource, setBookSource] = useState<object | null>(null);
   const [selectedBook, setSelectedBook] = useState<GoogleBook | null>(null);
   const { getToaster } = useCustomToast();
-
+  const [selectedTab, setSelectedTab] = useState(2);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,32 +146,46 @@ export default function Studio() {
           </div>
           <div className="col-span-3">
             <h3 className="p-4 mt-12 text-xl">Các bài viết</h3>
-            <div className="flex flex-col items-center justify-center h-fit">
-              {draftPosts.map((draftPost: Article, idx) =>
-                <EmptyCard className="flex flex-row justify-between w-full mb-8 border-2 border-black rounded-none" key={idx}
-                  onClick={() => handleUpdatePost(draftPost)}>
-                  <RoundedImage
-                    className="mx-8 rounded-xl"
-                    src={draftPost.image ?? "/default_post_image.png"}
-                    isReadOnly={false}
-                  />
-                  <div className="flex flex-col self-start flex-1">
-                    <span className="text-2xl font-semibold">{draftPost.title != "" ? draftPost.title : "Không tiêu đề"}</span>
-                    <span className="mt-2 italic">By <span className="text-lg font-bold">{draftPost.miscAuthor ?? "Không tác giả"}</span></span>
-                    <span className="mt-6">0 idea</span>
-                  </div>
-                  <DropdownMenu
-                    className=""
-                    buttonIcon={<EllipsisVertical />} options={[{
-                      label: "Delete", icon: <Trash2 />, action: (event: React.MouseEvent) => {
-                        event.stopPropagation();
-                        setDelConfirmModalOpen(true);
-                        // console.log("Delete " + draftPost.title)
-                      }
-                    }]} />
-                </EmptyCard>
-              )}
-            </div>
+            <Box sx={{ width: '90vw' }}>
+              <Tabs
+                value={selectedTab}
+                onChange={(e, newValue) => setSelectedTab(newValue)}
+                aria-label="Article status tabs"
+              >
+                <Tab label="Đã phát hành" value={2} />
+                <Tab label="Bị từ chối" value={3} />
+                <Tab label="Bản nháp" value={0} />
+                <Tab label="Chờ kiểm duyệt" value={1} />
+                <Tab label="Lưu trữ" value={4} />
+              </Tabs>
+
+              <div className="flex flex-col items-center justify-center h-fit">
+                {draftPosts.filter(post => post.status == selectedTab).map((draftPost: Article, idx) =>
+                  <EmptyCard className="flex flex-row justify-between w-full mb-8 border-2 border-black rounded-none" key={idx}
+                    onClick={() => handleUpdatePost(draftPost)}>
+                    <RoundedImage
+                      className="mx-8 rounded-xl"
+                      src={draftPost.image ?? "/default_post_image.png"}
+                      isReadOnly={false}
+                    />
+                    <div className="flex flex-col self-start flex-1">
+                      <span className="text-2xl font-semibold">{draftPost.title != "" ? draftPost.title : "Không tiêu đề"}</span>
+                      <span className="mt-2 italic">By <span className="text-lg font-bold">{draftPost.miscAuthor ?? "Không tác giả"}</span></span>
+                      <span className="mt-6">0 idea</span>
+                    </div>
+                    <DropdownMenu
+                      className=""
+                      buttonIcon={<EllipsisVertical />} options={[{
+                        label: "Delete", icon: <Trash2 />, action: (event: React.MouseEvent) => {
+                          event.stopPropagation();
+                          setDelConfirmModalOpen(true);
+                          // console.log("Delete " + draftPost.title)
+                        }
+                      }]} />
+                  </EmptyCard>
+                )}
+              </div>
+            </Box>
           </div>
 
 

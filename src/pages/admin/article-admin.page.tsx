@@ -312,6 +312,11 @@ export const ArticleList = ({
           key="publish"
           onClick={() => {
             putArticleStatus([{ articleId: row.original.articleId, status: ArticleStatus.Published }]);
+            setData((prev) =>
+              prev.map((article) => {
+                return article.articleId == row.original.articleId ? { ...article, status: ArticleStatus.Published } : article
+              })
+            );
             closeMenu();
           }}
           sx={{ m: 0 }}
@@ -326,6 +331,11 @@ export const ArticleList = ({
           key="notApproved"
           onClick={() => {
             putArticleStatus([{ articleId: row.original.articleId, status: ArticleStatus.NotApproved }]);
+            setData((prev) =>
+              prev.map((article) => {
+                return article.articleId == row.original.articleId ? { ...article, status: ArticleStatus.NotApproved } : article
+              })
+            );
             closeMenu();
           }}
           sx={{ m: 0 }}
@@ -340,6 +350,11 @@ export const ArticleList = ({
           key="archived"
           onClick={() => {
             putArticleStatus([{ articleId: row.original.articleId, status: ArticleStatus.Archived }]);
+            setData((prev) =>
+              prev.map((article) => {
+                return article.articleId == row.original.articleId ? { ...article, status: ArticleStatus.Archived } : article
+              })
+            );
             closeMenu();
           }}
           sx={{ m: 0 }}
@@ -427,7 +442,7 @@ export const ArticleList = ({
   });
 
   return (
-    <div className="overflow-y-auto w-[90vw] ">
+    <div className="overflow-y-auto ">
       {
         isLoading ? <CustomLoader className="fixed top-1/2 left-1/2" /> : <MaterialReactTable table={table} />
       }
@@ -442,7 +457,6 @@ export function ArticleAdminPage() {
   const [selectedTab, setSelectedTab] = useState(1); // Default to Pending tab
   const [data, setData] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [open, setOpen] = useState(false);
   const [filteredData, setFilteredData] = useState<Article[]>([]);
 
   useEffect(() => {
@@ -457,6 +471,7 @@ export function ArticleAdminPage() {
   useEffect(() => {
     // console.log(data)
     const newFilteredData = data.filter(article => {
+      // if (selectedTab === 0) return article.status === ArticleStatus.Draft;
       if (selectedTab === 1) return article.status === ArticleStatus.Pending;
       if (selectedTab === 2) return article.status === ArticleStatus.Published;
       if (selectedTab === 3) return article.status === ArticleStatus.NotApproved;
@@ -466,32 +481,22 @@ export function ArticleAdminPage() {
     setFilteredData(newFilteredData);
   }, [data, selectedTab]);
 
-
-
   return (
-    <div
-      className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700",
-        "h-screen w-screen" // Adjust to "h-screen" if needed for full height
-      )}
-    >
-      <Sidebar open={open} setOpen={setOpen} animate={true} />
-      <Box>
-        <Tabs
-          value={selectedTab}
-          onChange={(e, newValue) => setSelectedTab(newValue)}
-          aria-label="Article status tabs"
-        >
-          <Tab label="Pending" value={1} />
-          <Tab label="Published" value={2} />
-          <Tab label="Not Approved" value={3} />
-          <Tab label="Archived" value={4} />
-        </Tabs>
+    <Box sx={{ width: '90vw' }}>
+      <Tabs
+        value={selectedTab}
+        onChange={(e, newValue) => setSelectedTab(newValue)}
+        aria-label="Article status tabs"
+      >
+        {/* <Tab label="Draft" value={0} /> */}
+        <Tab label="Pending" value={1} />
+        <Tab label="Published" value={2} />
+        <Tab label="Not Approved" value={3} />
+        <Tab label="Archived" value={4} />
+      </Tabs>
 
-        <ArticleList data={filteredData} setData={setData} isLoading={isLoading} />
-      </Box>
-      {/* <ArticleList /> */}
-    </div>
+      <ArticleList data={filteredData} setData={setData} isLoading={isLoading} />
+    </Box>
   );
 }
 
