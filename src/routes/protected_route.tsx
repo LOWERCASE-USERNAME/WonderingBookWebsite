@@ -20,12 +20,12 @@ export const ProtectedManagerRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!auth || role !== "Manager" || role !== "Admin") {
+    if (!auth || role !== "Moderator" || role !== "Admin") {
       toast.error("You are not allowed to access this page.");
     }
   }, [auth, role]);
 
-  return auth && (role === "Manager" || role === "Admin") ? (
+  return auth && (role === "Moderator" || role === "Admin") ? (
     children
   ) : (
     <Navigate to={"/login"} replace state={{ error: "You are not allowed to access this page" }} />
